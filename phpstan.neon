@@ -1,0 +1,14 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    # Замечания к коду, написанному до подключения Larastan. Новых сюда не добавляем — исправляем.
+    - phpstan-baseline.neon
+
+parameters:
+    level: 5
+    paths:
+        - app
+        - routes
+        - database/factories
+    tmpDir: storage/framework/cache/phpstan
+    # Типы полей из casts() моделей (JSON → array, даты → Carbon)
+    parseModelCastsMethod: true

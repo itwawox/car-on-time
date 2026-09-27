@@ -1,0 +1,83 @@
+# Выкладка на хостинг reg.ru — две среды:
+#   staging    — тестовый сайт (dev.void-web.ru): автоматически после пуша в ветку dev;
+#   production — боевой сайт (car-on-time.ru): автоматически после мержа в main.
+# Вручную — вкладка Actions → «Выкладка на хостинг» → Run workflow: выбрать среду и что выложить (ветку или коммит для отката).
+#
+# У каждой среды свои секреты: Settings → Environments → staging / production → Environment secrets
+#   DEPLOY_HOST, DEPLOY_USER, DEPLOY_PATH, DEPLOY_PHP, DEPLOY_SSH_KEY (закрытый SSH-ключ), DEPLOY_PORT (необязательно)
+# и переменная Environment variables: DEPLOY_URL — адрес сайта этой среды (https://dev.void-web.ru или https://car-on-time.ru).
+# Включение — переменная репозитория (Settings → Secrets and variables → Actions → Variables): DEPLOY_ENABLED = true
+name: Выкладка на хостинг
+
+on:
+  push:
+    branches: [main, dev]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Куда выложить'
+        type: choice
+        options: [staging, production]
+        default: staging
+      ref:
+        description: 'Что выложить: ветка, тег или номер коммита (пусто — текущая ветка)'
+        required: false
+        default: ''
+
+concurrency:
+  group: deploy-${{ inputs.environment || (github.ref_name == 'main' && 'production' || 'staging') }}
+  cancel-in-progress: false
+
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+
+  deploy:
+    needs: tests
+    # Включается переменной репозитория DEPLOY_ENABLED=true — после того как заведены секреты доступа к хостингу
+    if: vars.DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ inputs.environment || (github.ref_name == 'main' && 'production' || 'staging') }}
+      url: ${{ vars.DEPLOY_URL }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, intl, gd, zip, bcmath
+          coverage: none
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Библиотеки PHP (без инструментов разработки)
+        run: composer install --no-dev --prefer-dist --optimize-autoloader --no-interaction --no-progress
+
+      - name: Сборка стилей и скриптов
+        run: |
+          npm ci --no-audit --no-fund
+          npm run build
+
+      - name: SSH-ключ для хостинга
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+          printf 'Host *\n  IdentityFile ~/.ssh/id_deploy\n  StrictHostKeyChecking accept-new\n' > ~/.ssh/config
+
+      - name: Выкладка
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          DEPLOY_PHP: ${{ secrets.DEPLOY_PHP }}
+          DEPLOY_PORT: ${{ secrets.DEPLOY_PORT || '22' }}
+          DEPLOY_URL: ${{ vars.DEPLOY_URL }}
+          DEPLOY_REF: ${{ inputs.ref || github.ref_name }}
+        run: bash deploy/release.sh

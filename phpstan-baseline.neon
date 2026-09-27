@@ -1,0 +1,355 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Console/Commands/EscalateOverdueBookings.php
+
+		-
+			message: '#^Method App\\Filament\\Pages\\FleetCalendar\:\:rows\(\) should return Illuminate\\Support\\Collection\<int, array\{car\: App\\Models\\Car, cells\: list\<array\{kind\: string\|null, label\: string\|null, url\: string\|null\}\>, busy\: int\}\> but returns Illuminate\\Support\\Collection\<int, array\{car\: App\\Models\\Car, cells\: list\<array\{kind\: ''block''\|''booking''\|''request''\|null, label\: mixed, url\: string\|null\}\>, busy\: int\<0, max\>\}\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Filament/Pages/FleetCalendar.php
+
+		-
+			message: '#^Access to an undefined property App\\Filament\\Pages\\Integrations\:\:\$form\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Filament/Pages/Integrations.php
+
+		-
+			message: '#^Access to an undefined property App\\Filament\\Pages\\SeoSettingsPage\:\:\$form\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Pages/SeoSettingsPage.php
+
+		-
+			message: '#^Access to an undefined property App\\Filament\\Pages\\SiteSettings\:\:\$form\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Pages/SiteSettings.php
+
+		-
+			message: '#^Access to an undefined property App\\Filament\\Pages\\SmartSearchSettings\:\:\$form\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Filament/Pages/SmartSearchSettings.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Resources/Bookings/Pages/EditBooking.php
+
+		-
+			message: '#^Parameter \#1 \$booking of static method App\\Filament\\Resources\\Bookings\\BookingResource\:\:conflicts\(\) expects App\\Models\\Booking, Illuminate\\Database\\Eloquent\\Model given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Resources/Bookings/Pages/EditBooking.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<\(int\|string\),Illuminate\\Database\\Eloquent\\Model\>\:\:each\(\) expects callable\(Illuminate\\Database\\Eloquent\\Model, int\|string\)\: mixed, Closure\(App\\Models\\Car\)\: bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Resources/Cars/CarResource.php
+
+		-
+			message: '#^Cannot access property \$description on Illuminate\\Database\\Eloquent\\Model\|int\|string\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Filament/Resources/Cars/Pages/EditCar.php
+
+		-
+			message: '#^Cannot access property \$name on Illuminate\\Database\\Eloquent\\Model\|int\|string\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Filament/Resources/Cars/Pages/EditCar.php
+
+		-
+			message: '#^Cannot access property \$slug on Illuminate\\Database\\Eloquent\\Model\|int\|string\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: app/Filament/Resources/Cars/Pages/EditCar.php
+
+		-
+			message: '#^Parameter \#1 \$subject of job class App\\Jobs\\PushToBitrix24 constructor expects App\\Models\\Booking\|App\\Models\\Lead in App\\Jobs\\PushToBitrix24\:\:dispatch\(\), Illuminate\\Database\\Eloquent\\Model\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Resources/IntegrationLogs/IntegrationLogResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Resources/SearchQueries/SearchQueryResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$search_aliases\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Filament/Resources/SearchQueries/SearchQueryResource.php
+
+		-
+			message: '#^Match expression does not handle remaining value\: string$#'
+			identifier: match.unhandled
+			count: 1
+			path: app/Filament/Resources/SearchQueries/SearchQueryResource.php
+
+		-
+			message: '#^Parameter \#1 \$chart of method Filament\\Widgets\\StatsOverviewWidget\\Stat\:\:chart\(\) expects array\<float\>\|Illuminate\\Contracts\\Support\\Arrayable\|null, list\<int\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Filament/Widgets/KpiOverview.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/BookingController.php
+
+		-
+			message: '#^Parameter \#1 \$key of method Illuminate\\Database\\Eloquent\\Collection\<int,Illuminate\\Database\\Eloquent\\Model\>\:\:partition\(\) expects \(callable\(Illuminate\\Database\\Eloquent\\Model, int\)\: bool\)\|Illuminate\\Database\\Eloquent\\Model\|string, Closure\(App\\Models\\Booking\)\: bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Http/Controllers/CabinetController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/CabinetController.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Jobs/SendBookingSms.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\BodyType\:\:\$search_aliases\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Car.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\CarClass\:\:\$search_aliases\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Car.php
+
+		-
+			message: '#^Call to an undefined method Spatie\\Image\\Drivers\\ImageDriver\:\:nonQueued\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Models/Car.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Models/CarModel.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Review\:\:\$a\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Review.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Review\:\:\$c\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Models/Review.php
+
+		-
+			message: '#^Unsafe access to private property App\\Models\\Setting\:\:\$memo through static\:\:\.$#'
+			identifier: staticClassAccess.privateProperty
+			count: 3
+			path: app/Models/Setting.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Bitrix24/Bitrix24Sync.php
+
+		-
+			message: '#^Parameter \#1 \$date of method App\\Models\\Season\:\:contains\(\) expects Illuminate\\Support\\Carbon, Carbon\\CarbonInterface given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Services/QuoteCalculator.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>id" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/QuoteCalculator.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/QuoteCalculator.php
+
+		-
+			message: '#^Parameter \#1 \$array \(array\{0\?\: mixed\}\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: app/Services/Seo.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Services/Seo.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: app/Services/TelegramNotifier.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\{0\?\: mixed, 1\?\: mixed\}\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: app/Support/CarSeoLinks.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Support/CatalogListing.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$h1\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Support/CatalogListing.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$intro\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Support/CatalogListing.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$seo_text\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Support/CatalogListing.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Support/CatalogListing.php
+
+		-
+			message: '#^Parameter \#1 \$cars of method App\\Services\\Seo\:\:itemList\(\) expects iterable\<App\\Models\\Car\>, Illuminate\\Support\\Collection\<\(int\|string\), mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Support/CatalogListing.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>\(Expression\)" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Support/CatalogListing.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>description" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Support/CatalogListing.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>h1" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Support/CatalogListing.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>intro" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Support/CatalogListing.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>seo_text" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Support/CatalogListing.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>title" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Support/CatalogListing.php
+
+		-
+			message: '#^Parameter \#1 \$callback of method Illuminate\\Support\\Collection\<int,App\\Models\\Booking\>\:\:filter\(\) expects \(callable\(App\\Models\\Booking, int\)\: bool\)\|null, Closure\(App\\Models\\Booking\)\: \(Carbon\\Carbon\|null\) given\.$#'
+			identifier: argument.type
+			count: 2
+			path: app/Support/Kpi.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>commission_percent" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Support/Kpi.php
+
+		-
+			message: '#^Using nullsafe property access "\?\-\>name" on left side of \?\? is unnecessary\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Support/Kpi.php
+
+		-
+			message: '#^Method App\\Support\\QuizMatcher\:\:scored\(\) never assigns null to &\$relaxed so it can be removed from the by\-ref type\.$#'
+			identifier: parameterByRef.unusedType
+			count: 1
+			path: app/Support/QuizMatcher.php
+
+		-
+			message: '#^Parameter \#1 \$fields of static method App\\Support\\Search\\TermMatcher\:\:buildTerms\(\) expects array\<string, array\{string\|null, float\}\>, array\{array\{mixed, 1\.0\}, array\{string, 1\.0\}\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Support/Search/CarSearch.php
+
+		-
+			message: '#^Parameter \#1 \$fields of static method App\\Support\\Search\\TermMatcher\:\:buildTerms\(\) expects array\<string, array\{string\|null, float\}\>, array\{array\{string, 1\.0\}, array\{string, 1\.0\}\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Support/Search/CarSearch.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:getScoutModelsByIds\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Support/Search/SmartEngine.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Model\:\:searchableAs\(\)\.$#'
+			identifier: method.notFound
+			count: 4
+			path: app/Support/Search/SmartEngine.php
+
+		-
+			message: '#^Call to an undefined static method Illuminate\\Database\\Eloquent\\Model\:\:makeAllSearchableQuery\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Support/Search/SmartEngine.php
+
+		-
+			message: '#^Parameter \#1 \$fields of static method App\\Support\\Search\\TermMatcher\:\:buildTerms\(\) expects array\<string, array\{string\|null, float\}\>, array\{array\{mixed, float\}, array\{mixed, float\}, array\{mixed, float\}, array\{mixed, float\}, array\{mixed, float\}, array\{mixed, float\}, array\{mixed, float\}\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Support/Search/SmartEngine.php
+
+		-
+			message: '#^Parameter \#1 \$array \(list\<string\>\) of array_values is already a list, call has no effect\.$#'
+			identifier: arrayValues.list
+			count: 1
+			path: app/Support/Search/TextNormalizer.php
