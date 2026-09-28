@@ -20,7 +20,12 @@
         @else
             <div class="favorites-tools">
                 <button type="button" class="btn btn-secondary btn-sm" data-share data-share-title="Мои машины — {{ \App\Models\Setting::get('brand_name', 'Car on Time') }}">@include('partials.icon', ['name' => 'share', 'size' => 16]) Поделиться списком</button>
-                <a class="btn btn-outline btn-sm" href="{{ route('compare', ['ids' => $cars->take(3)->pluck('id')->implode(',')]) }}">@include('partials.icon', ['name' => 'compare', 'size' => 16]) Сравнить первые {{ min(3, $cars->count()) }}</a>
+                @if($cars->count() > 1)
+                    @php($compareCount = min(\App\Http\Controllers\CompareController::LIMIT, $cars->count()))
+                    <a class="btn btn-outline btn-sm" href="{{ route('compare', ['ids' => $cars->take($compareCount)->pluck('id')->implode(',')]) }}">@include('partials.icon', ['name' => 'compare', 'size' => 16]) {{ $cars->count() > $compareCount ? 'Сравнить первые '.$compareCount : 'Сравнить '.$compareCount.' '.trans_choice('машину|машины|машин', $compareCount) }}</a>
+                @else
+                    <a class="btn btn-hint btn-sm" href="{{ route('catalog') }}" data-tooltip="{{ \App\Models\Setting::get('compare_need_more_hint') ?: 'Сравнивать можно от двух машин — отметьте ещё одну сердечком или кнопкой «Сравнить»' }}">@include('partials.icon', ['name' => 'plus', 'size' => 16]) {{ \App\Models\Setting::get('compare_need_more') ?: 'Добавьте ещё машину для сравнения' }}</a>
+                @endif
                 <button type="button" class="clear-btn" data-favorites-clear data-tooltip="{{ \App\Models\Setting::get('favorites_clear_hint') ?: 'Убрать все машины из избранного' }}">@include('partials.icon', ['name' => 'close', 'size' => 14, 'stroke' => 2.2]) {{ \App\Models\Setting::get('favorites_clear') ?: 'Очистить избранное' }}</button>
             </div>
             <div class="car-grid">

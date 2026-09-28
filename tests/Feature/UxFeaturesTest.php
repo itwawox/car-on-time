@@ -96,4 +96,28 @@ class UxFeaturesTest extends TestCase
         $this->get('/izbrannoe?ids='.$a->id)->assertOk()->assertSee('Fav One')->assertSee('<meta name="robots" content="noindex,follow">', false);
         $this->get('/izbrannoe')->assertOk()->assertSee('Здесь пока пусто');
     }
+
+    public function test_car_card_heading_is_not_taken_from_the_page_variables(): void
+    {
+        $a = $this->car('Fav Title', 1500);
+
+        // Страница «Избранное» передаёт в шаблон свой $heading — он не должен становиться тегом заголовка карточки
+        $this->get('/izbrannoe?ids='.$a->id)->assertOk()
+            ->assertSee('<h3 class="car-card-title">', false)
+            ->assertDontSee('<Избранное', false);
+    }
+
+    public function test_one_car_asks_to_add_another_before_comparing(): void
+    {
+        $a = $this->car('Cmp One', 1500);
+        $b = $this->car('Cmp Two', 1600);
+
+        $this->get('/izbrannoe?ids='.$a->id)->assertOk()
+            ->assertSee('Добавьте ещё машину для сравнения')
+            ->assertDontSee('Сравнить первые');
+        $this->get('/sravnenie?ids='.$a->id)->assertOk()->assertSee('Добавьте ещё хотя бы одну машину');
+
+        $this->get('/izbrannoe?ids='.$a->id.','.$b->id)->assertOk()->assertSee('Сравнить 2 машины');
+        $this->get('/sravnenie?ids='.$a->id.','.$b->id)->assertOk()->assertDontSee('Добавьте ещё хотя бы одну машину');
+    }
 }

@@ -3,6 +3,8 @@
     $from = $car->currentPriceFrom();
     $eager = $eager ?? false;
     $badge = \App\Support\CarBadges::for($car->id);
+    // Тег заголовка карточки — только h2 или h3; своё имя, чтобы не подхватить переменные страницы
+    $titleTag = in_array($titleTag ?? null, ['h2', 'h3'], true) ? $titleTag : 'h3';
 @endphp
 <article class="card card-link car-card relative" @isset($reveal) data-reveal @endisset>
     <a class="car-card-media" data-skeleton href="{{ route('car.show', $car->slug) }}" tabindex="-1" aria-hidden="true">
@@ -22,7 +24,7 @@
         </button>
     </div>
     <div class="car-card-body">
-        <{{ $heading ?? 'h3' }} class="car-card-title"><a href="{{ route('car.show', $car->slug) }}">{{ $car->displayName() }}</a></{{ $heading ?? 'h3' }}>
+        <{{ $titleTag }} class="car-card-title"><a href="{{ route('car.show', $car->slug) }}">{{ $car->displayName() }}</a></{{ $titleTag }}>
         <div class="flex flex-wrap gap-1.5">
             <span class="chip">@include('partials.icon', ['name' => 'gearbox', 'size' => 12]) {{ $car->fuel === 'electric' ? 'Электро' : $car->gearboxLabel() }}</span>
             @if($car->seats)<span class="chip">@include('partials.icon', ['name' => 'seats', 'size' => 12]) {{ $car->seats }} {{ trans_choice('место|места|мест', (int) $car->seats) }}</span>@endif
