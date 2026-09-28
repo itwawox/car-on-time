@@ -32,6 +32,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <script>document.documentElement.classList.add('js');try{var t=localStorage.getItem('theme');if(t==='dark'||t==='light')document.documentElement.dataset.theme=t;if(localStorage.getItem('catalog:view')==='table')document.documentElement.dataset.catalogView='table'}catch(e){}</script>
+    @include('partials.photo-transition')
     <meta name="color-scheme" content="light dark">
     <title>{{ $pageTitle }}</title>
     @if($pageDescription)

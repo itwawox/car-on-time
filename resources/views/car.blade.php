@@ -69,7 +69,7 @@
                 <div class="card car-gallery" data-skeleton>
                     @if($gallery)
                         <button type="button" class="car-gallery-open" data-gallery-open="0" aria-label="Открыть фото на весь экран">
-                            <img src="{{ $gallery[0]['src'] }}" alt="{{ $gallery[0]['alt'] }}" width="1280" height="705" data-gallery-main style="view-transition-name: car-{{ $car->id }}"
+                            <img src="{{ $gallery[0]['src'] }}" alt="{{ $gallery[0]['alt'] }}" width="1280" height="705" data-gallery-main
                                  @if($gallery[0]['srcset']) srcset="{{ $gallery[0]['srcset'] }}" sizes="(min-width: 1024px) 760px, 100vw" @endif
                                  fetchpriority="high" decoding="async">
                             <span class="car-gallery-zoom" aria-hidden="true">@include('partials.icon', ['name' => 'expand', 'size' => 18])</span>

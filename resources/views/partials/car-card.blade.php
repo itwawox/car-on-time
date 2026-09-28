@@ -9,7 +9,7 @@
 <article class="card card-link car-card relative" @isset($reveal) data-reveal @endisset>
     <a class="car-card-media" data-skeleton href="{{ route('car.show', $car->slug) }}" tabindex="-1" aria-hidden="true">
         @if($cover)
-            <img src="{{ $cover }}" alt="{{ $car->coverAlt() }}" width="640" height="353" style="view-transition-name: car-{{ $car->id }}"
+            <img src="{{ $cover }}" alt="{{ $car->coverAlt() }}" width="640" height="353"
                  @if($srcset = $car->coverSrcset()) srcset="{{ $srcset }}" sizes="(min-width: 1200px) 290px, (min-width: 900px) 33vw, (min-width: 560px) 50vw, 100vw" @endif
                  @if($eager) fetchpriority="high" @else loading="lazy" @endif decoding="async">
         @else

@@ -42,7 +42,7 @@
             <article class="card qr-best hero-anim">
                 <a class="qr-best-media" href="{{ route('car.show', $car->slug) }}" data-skeleton>
                     @if($cover = $car->coverUrl('large'))
-                        <img src="{{ $cover }}" alt="{{ $car->coverAlt() }}" width="1280" height="705" fetchpriority="high" style="view-transition-name: car-{{ $car->id }}">
+                        <img src="{{ $cover }}" alt="{{ $car->coverAlt() }}" width="1280" height="705" fetchpriority="high">
                     @endif
                 </a>
                 <div class="qr-best-body">

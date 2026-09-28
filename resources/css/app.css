@@ -2086,6 +2086,9 @@
 ::view-transition-old(root), ::view-transition-new(root) { animation-duration: .22s; }
 ::view-transition-group(*) { animation-duration: .32s; animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1); }
 .site-header { view-transition-name: site-header; }
+/* «Перелёт» фото машины между списком и страницей машины: чуть дольше и мягче остальной страницы */
+::view-transition-group(car-photo) { animation-duration: .45s; }
+::view-transition-old(car-photo), ::view-transition-new(car-photo) { height: 100%; object-fit: contain; }
 
 /* ------------------------------------------------------------------
    Подложка ключевых блоков в духе СберБизнеса и кнопки «Очистить …»
