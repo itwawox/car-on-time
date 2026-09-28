@@ -14,6 +14,7 @@ import { initRails } from './rails';
 import { initHome } from './home';
 import { initCookies } from './cookies';
 import { initAnalytics } from './analytics';
+import { initTooltips } from './tooltips';
 
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -135,12 +136,24 @@ function initQuote() {
     const money = (n) => `${Number(n).toLocaleString('ru-RU')} ₽`;
     const daysWord = (n) => (n % 10 === 1 && n % 100 !== 11 ? 'сутки' : 'суток');
     const waLinks = document.querySelectorAll('[data-wa-link]');
+    // Кнопка говорит, что будет: «Оставить заявку · 3 суток · 12 400 ₽»
+    const submitBtn = form.querySelector('[data-submit]');
+    const submitLabel = submitBtn?.textContent.trim() ?? '';
+    // После первого расчёта по выбору посетителя подсвечиваем телефон — последний шаг
+    const phone = form.querySelector('[name="phone"]');
+    const phoneNext = form.querySelector('[data-phone-next]');
+    let phoneHinted = false;
+    phone?.addEventListener('input', () => {
+        phone.classList.remove('is-next');
+        if (phoneNext) phoneNext.hidden = true;
+    });
     const { quoteUrl, carName, waBase, freeText, busyText } = form.dataset;
     let controller = null;
 
     const val = (name) => form.querySelector(`[name="${name}"]`)?.value ?? '';
 
-    async function refresh() {
+    async function refresh(event) {
+        const byVisitor = Boolean(event);
         controller?.abort();
         controller = new AbortController();
 
@@ -182,6 +195,14 @@ function initQuote() {
             totals.forEach((el) => animateNumber(el, data.total));
             if (daysEl) daysEl.textContent = `за ${data.days} ${daysWord(data.days)}`;
             if (perDayEl && data.days) perDayEl.textContent = `${money(Math.round(data.rent_total / data.days))}/сут`;
+            if (submitBtn && !form.dataset.sending) {
+                submitBtn.textContent = data.days ? `${submitLabel} · ${data.days} ${daysWord(data.days)} · ${money(data.total)}` : submitLabel;
+            }
+            if (byVisitor && !phoneHinted && phone && phone.value.replace(/\D/g, '').length < 11) {
+                phoneHinted = true;
+                phone.classList.add('is-next');
+                if (phoneNext) phoneNext.hidden = false;
+            }
             // Под ценой — только то, что к ней добавляет смысл: доставка уже в сумме, залог отдельно
             if (lineEl) {
                 const delivery = (data.pickup_cost || 0) + (data.return_cost || 0);
@@ -450,3 +471,4 @@ initQuiz();
 initRails();
 initHome();
 initCookies();
+initTooltips();

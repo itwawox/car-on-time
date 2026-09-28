@@ -125,7 +125,7 @@
                 <span class="search-trigger-text">{{ \App\Support\Search\SearchSettings::text('header_trigger') }}</span>
                 <kbd class="search-trigger-kbd" data-shortcut-label>Ctrl K</kbd>
             </button>
-            <a class="icon-btn fav-link" href="{{ route('favorites') }}" data-fav-link aria-label="Избранное" title="Избранное" rel="nofollow">@include('partials.icon', ['name' => 'heart', 'size' => 18])<span class="fav-count" data-fav-count hidden></span></a>
+            <a class="icon-btn fav-link" href="{{ route('favorites') }}" data-fav-link aria-label="Избранное" data-tooltip="Избранное" rel="nofollow">@include('partials.icon', ['name' => 'heart', 'size' => 18])<span class="fav-count" data-fav-count hidden></span></a>
             <button class="icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Тёмная тема" title="Тёмная тема">
                 <span class="theme-icon-moon">@include('partials.icon', ['name' => 'moon', 'size' => 18])</span>
                 <span class="theme-icon-sun">@include('partials.icon', ['name' => 'sun', 'size' => 18])</span>
