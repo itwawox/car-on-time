@@ -22,6 +22,7 @@ class Icons
         'bag' => '<rect x="4" y="8" width="16" height="12" rx="2"/><path d="M9 8V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v3M4 13h16"/>',
         'clearance' => '<path d="M3 12h18M6 12l1.5-4h9L18 12"/><path d="M12 15v6M9.5 17.5 12 15l2.5 2.5M9.5 18.5 12 21l2.5-2.5"/>',
         'filter' => '<path d="M4 6h16M7 12h10M10 18h4"/>',
+        'sort' => '<path d="M7 4v16M3 16l4 4 4-4M17 20V4M13 8l4-4 4 4"/>',
         'heart' => '<path d="M12 20s-7-4.4-9.2-9A5 5 0 0 1 12 6a5 5 0 0 1 9.2 5c-2.2 4.6-9.2 9-9.2 9z"/>',
         'share' => '<circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/>',
         'user' => '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',

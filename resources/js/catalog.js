@@ -12,24 +12,22 @@ const plural = (n, forms) => {
     return b === 1 ? forms[0] : forms[2];
 };
 
-// Телефон: панель «Фильтры · Даты · Сортировка» прилипает к верху и прячется при прокрутке вниз, возвращается при прокрутке вверх
-function initStickyToolbar() {
-    const bar = document.querySelector('.catalog-toolbar');
-    if (!bar || !window.matchMedia('(max-width: 767px)').matches) return;
-    bar.classList.add('is-sticky');
-    let last = window.scrollY;
-    window.addEventListener('scroll', () => {
-        const y = window.scrollY;
-        if (Math.abs(y - last) < 8) return;
-        bar.classList.toggle('is-away', y > last && y > 400);
-        last = y;
-    }, { passive: true });
+// Вводный текст раздела — одной строкой; «Подробнее» показываем, только если текст действительно обрезан
+function initLead() {
+    const lead = document.querySelector('[data-lead]');
+    const more = document.querySelector('[data-lead-more]');
+    if (!lead || !more) return;
+    more.hidden = lead.scrollHeight <= lead.clientHeight + 1;
+    more.addEventListener('click', () => {
+        lead.classList.add('is-open');
+        more.hidden = true;
+    });
 }
 
 export function initCatalog() {
+    initLead();
     const views = document.querySelector('[data-catalog-views]');
     if (!views) return;
-    initStickyToolbar();
 
     const root = document.documentElement;
     const buttons = document.querySelectorAll('[data-view-set]');

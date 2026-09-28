@@ -12,15 +12,43 @@
         @include('partials.breadcrumbs')
         <h1>{{ $meta['h1'] }}</h1>
         @if(!empty($meta['intro']))
-            <p class="lead">{{ $meta['intro'] }}</p>
+            {{-- Вводный текст — одной строкой, целиком по «Подробнее»: до машин меньше прокрутки --}}
+            <p class="lead catalog-lead" data-lead>{{ $meta['intro'] }}</p>
+            <button type="button" class="catalog-lead-more" data-lead-more hidden>{{ \App\Models\Setting::get('catalog_lead_more') ?: 'Подробнее' }}</button>
         @endif
     </div>
 </section>
 
-<section class="section" style="padding-top:24px">
+<section class="section" style="padding-top:16px">
     <div class="container-x">
-        <div class="catalog-search">
-            @include('partials.search-box', ['id' => 'catalog', 'label' => 'Поиск по каталогу', 'placeholder' => \App\Support\Search\SearchSettings::text('placeholder_catalog')])
+        {{-- Командная строка: поиск · даты · сортировка · фильтры · вид. На компьютере прилипает под шапкой, на телефоне действия — плавающей панелью внизу --}}
+        <div class="cmdbar" data-cmdbar>
+            <div class="catalog-search">
+                @include('partials.search-box', ['id' => 'catalog', 'label' => 'Поиск по каталогу', 'placeholder' => \App\Support\Search\SearchSettings::text('placeholder_catalog')])
+            </div>
+            <div class="cmdbar-actions">
+                <div class="catalog-dates" data-catalog-dates data-busy-text="{{ \App\Models\Setting::get('availability_busy_card') ?: 'Занята на эти даты' }}">
+                    {{-- Даты для цен «за ваши даты»: без JS — просто поля, с JS — календарь периода --}}
+                    <div class="daterange-fields catalog-daterange" data-daterange data-min-days="1" data-compact>
+                        <div><label class="field-label" for="c-start">Начало</label><input class="field" id="c-start" type="datetime-local" name="starts_at"></div>
+                        <div><label class="field-label" for="c-end">Окончание</label><input class="field" id="c-end" type="datetime-local" name="ends_at"></div>
+                    </div>
+                </div>
+                <label class="catalog-sort" title="Сортировка">
+                    <span class="sr-only">Сортировка</span>
+                    <span class="catalog-sort-icon" aria-hidden="true">@include('partials.icon', ['name' => 'sort', 'size' => 18])</span>
+                    <select class="field" onchange="location.href=this.value">
+                        <option value="{{ request()->fullUrlWithQuery(['sort' => null]) }}">Сначала популярные</option>
+                        @foreach(\App\Support\CatalogListing::SORTS as $key => [$label])
+                            <option value="{{ request()->fullUrlWithQuery(['sort' => $key]) }}" @selected(request('sort') === $key)>{{ $label }}</option>
+                        @endforeach
+                    </select>
+                </label>
+                <button type="button" class="btn btn-outline btn-sm filters-open" data-filters-open aria-haspopup="dialog" aria-controls="filters">
+                    @include('partials.icon', ['name' => 'filter', 'size' => 16]) Фильтры@if(count($filterChips))<span class="filters-count">{{ count($filterChips) }}</span>@endif
+                </button>
+                @include('partials.catalog-view-toggle')
+            </div>
         </div>
 
         <nav class="filter-bar" aria-label="Фильтры каталога" data-rail>
@@ -36,55 +64,38 @@
             <a class="filter" href="{{ route('korobka', 'mehanika') }}" @if(($meta['gearbox'] ?? '') === 'mt') aria-current="page" @endif>Механика</a>
         </nav>
 
-        <div class="catalog-toolbar">
+        <div class="catalog-meta">
             <p class="m-0 font-semibold">Найдено {{ $cars->total() }} авто</p>
-            <button type="button" class="btn btn-outline btn-sm filters-open" data-filters-open aria-haspopup="dialog" aria-controls="filters">
-                @include('partials.icon', ['name' => 'filter', 'size' => 16]) Фильтры@if(count($filterChips))<span class="filters-count">{{ count($filterChips) }}</span>@endif
-            </button>
             @include('partials.places-data')
             <span class="place-chip" data-place-chip hidden>@include('partials.icon', ['name' => 'pin', 'size' => 14]) <span data-place-chip-text></span><button type="button" aria-label="Убрать место выдачи" data-place-chip-clear>@include('partials.icon', ['name' => 'close', 'size' => 12])</button></span>
-            <div class="catalog-dates" data-catalog-dates data-busy-text="{{ \App\Models\Setting::get('availability_busy_card') ?: 'Занята на эти даты' }}">
-                {{-- Даты для цен «за ваши даты»: без JS — просто поля, с JS — календарь периода --}}
-                <div class="daterange-fields catalog-daterange" data-daterange data-min-days="1" data-compact>
-                    <div><label class="field-label" for="c-start">Начало</label><input class="field" id="c-start" type="datetime-local" name="starts_at"></div>
-                    <div><label class="field-label" for="c-end">Окончание</label><input class="field" id="c-end" type="datetime-local" name="ends_at"></div>
-                </div>
-            </div>
-            <label class="catalog-sort">
-                <span class="sr-only">Сортировка</span>
-                <select class="field" onchange="location.href=this.value">
-                    <option value="{{ request()->fullUrlWithQuery(['sort' => null]) }}">Сначала популярные</option>
-                    @foreach(\App\Support\CatalogListing::SORTS as $key => [$label])
-                        <option value="{{ request()->fullUrlWithQuery(['sort' => $key]) }}" @selected(request('sort') === $key)>{{ $label }}</option>
-                    @endforeach
-                </select>
-            </label>
-            <div class="view-toggle" role="group" aria-label="Вид каталога">
-                <button type="button" data-view-set="cards" aria-pressed="true">@include('partials.icon', ['name' => 'grid', 'size' => 16]) Карточки</button>
-                <button type="button" data-view-set="table" aria-pressed="false">@include('partials.icon', ['name' => 'compare', 'size' => 16]) Подробно</button>
-            </div>
+            @include('partials.catalog-view-toggle')
         </div>
 
         @if(count($filterChips))
             <div class="filter-chips" aria-label="Выбранные фильтры">
                 @foreach($filterChips as $chip)
-                    @php
-                        $q = request()->except(['page']);
-                        if ($chip['key'] === 'price') { unset($q['price_min'], $q['price_max']); }
-                        elseif ($chip['value'] !== null) { $q[$chip['key']] = array_values(array_diff((array) ($q[$chip['key']] ?? []), [$chip['value']])); }
-                        else { unset($q[$chip['key']]); }
-                    @endphp
-                    <a class="filter-chip" href="{{ url()->current().($q ? '?'.http_build_query($q) : '') }}" rel="nofollow" aria-label="Убрать фильтр {{ $chip['label'] }}">{{ $chip['label'] }} @include('partials.icon', ['name' => 'close', 'size' => 12])</a>
+                    <a class="filter-chip" href="{{ \App\Support\CatalogFilters::urlWithout(request(), $chip) }}" rel="nofollow" aria-label="Убрать фильтр {{ $chip['label'] }}">{{ $chip['label'] }} @include('partials.icon', ['name' => 'close', 'size' => 12])</a>
                 @endforeach
                 <a class="filter-chip-reset" href="{{ url()->current() }}" rel="nofollow">Сбросить всё</a>
             </div>
         @endif
 
         @if($cars->isEmpty() && count($filterChips))
-            <div class="card card-pad text-center">
+            <div class="card card-pad text-center catalog-empty">
                 <p class="m-0 mb-2 font-semibold">Под эти фильтры машин нет</p>
-                <p class="note m-0 mb-4">Уберите один из фильтров или напишите нам — подберём похожую машину.</p>
-                <a class="btn btn-primary" href="{{ url()->current() }}">Сбросить фильтры</a>
+                @if(!empty($relax))
+                    {{-- Подсказка вместо тупика: какое одно условие убрать, и сколько машин тогда найдётся --}}
+                    <p class="note m-0 mb-4">{{ \App\Models\Setting::get('catalog_relax_text') ?: 'Уберите одно условие — машины найдутся:' }}</p>
+                    <div class="relax-list">
+                        @foreach($relax as $r)
+                            <a class="relax" href="{{ $r['url'] }}" rel="nofollow">Убрать «{{ $r['label'] }}» <b>→ {{ $r['count'] }} {{ trans_choice('машина|машины|машин', $r['count']) }}</b></a>
+                        @endforeach
+                    </div>
+                    <a class="catalog-empty-reset" href="{{ url()->current() }}" rel="nofollow">Сбросить все фильтры</a>
+                @else
+                    <p class="note m-0 mb-4">Уберите один из фильтров или напишите нам — подберём похожую машину.</p>
+                    <a class="btn btn-primary" href="{{ url()->current() }}">Сбросить фильтры</a>
+                @endif
             </div>
         @elseif($cars->isEmpty())
             <div class="card card-pad text-center">

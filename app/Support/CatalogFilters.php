@@ -124,6 +124,46 @@ class CatalogFilters
         return $chips;
     }
 
+    /**
+     * Фильтры без одного выбранного условия (чип «× Автомат»).
+     *
+     * @param  array{key: string, value: ?string}  $chip
+     */
+    public static function without(array $f, array $chip): array
+    {
+        if ($chip['key'] === 'price') {
+            unset($f['price_min'], $f['price_max']);
+        } elseif ($chip['value'] !== null) {
+            $f[$chip['key']] = array_values(array_diff($f[$chip['key']] ?? [], [$chip['value']]));
+            if (! $f[$chip['key']]) {
+                unset($f[$chip['key']]);
+            }
+        } else {
+            unset($f[$chip['key']]);
+        }
+
+        return $f;
+    }
+
+    /**
+     * Адрес текущей страницы без одного условия — для ссылок «× Автомат».
+     *
+     * @param  array{key: string, value: ?string}  $chip
+     */
+    public static function urlWithout(Request $request, array $chip): string
+    {
+        $q = $request->except(['page']);
+        if ($chip['key'] === 'price') {
+            unset($q['price_min'], $q['price_max']);
+        } elseif ($chip['value'] !== null) {
+            $q[$chip['key']] = array_values(array_diff((array) ($q[$chip['key']] ?? []), [$chip['value']]));
+        } else {
+            unset($q[$chip['key']]);
+        }
+
+        return url()->current().($q ? '?'.http_build_query($q) : '');
+    }
+
     /** @return array{class: array<string,int>, body: array<string,int>, brand: array<string,int>} */
     private static function maps(): array
     {

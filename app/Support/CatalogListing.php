@@ -8,6 +8,7 @@ use App\Models\Car;
 use App\Models\CarClass;
 use App\Services\Seo;
 use App\Support\Seo\SeoSettings;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -62,6 +63,7 @@ class CatalogListing
 
         // Фильтры в адресе (?kp=at&seats=7&class[]=biznes…) — рабочие, но закрыты от индекса
         $filters = CatalogFilters::fromRequest($request);
+        $unfiltered = clone $query;
         if (($ids = CatalogFilters::ids($filters)) !== null) {
             $query->whereIn('cars.id', $ids ?: [0]);
         }
@@ -124,7 +126,8 @@ class CatalogListing
         return view('catalog', [
             'cars' => $cars,
             'filters' => $filters,
-            'filterChips' => CatalogFilters::chips($filters),
+            'filterChips' => $chips = CatalogFilters::chips($filters),
+            'relax' => $cars->isEmpty() ? self::relax($unfiltered, $filters, $chips, $request) : [],
             'priceRange' => [
                 (int) (collect(Fleet::all())->pluck('price')->filter()->min() ?? 0),
                 (int) (collect(Fleet::all())->pluck('price')->filter()->max() ?? 0),
@@ -138,5 +141,28 @@ class CatalogListing
             'canonical' => $cars->url($page),
             'jsonld' => array_filter([$seo->breadcrumbs($crumbs), $seo->itemList($cars->getCollection(), $meta['h1'])]),
         ]);
+    }
+
+    /**
+     * Пустая выдача: какое одно условие убрать, чтобы машины нашлись («Убрать „Автомат“ → 18 машин»).
+     * Считаем по-настоящему для каждого условия, показываем до трёх лучших.
+     *
+     * @param  Builder<Car>  $unfiltered
+     * @param  list<array{key: string, value: ?string, label: string}>  $chips
+     * @return list<array{label: string, count: int, url: string}>
+     */
+    private static function relax(Builder $unfiltered, array $filters, array $chips, Request $request): array
+    {
+        $out = [];
+        foreach ($chips as $chip) {
+            $ids = CatalogFilters::ids(CatalogFilters::without($filters, $chip));
+            $count = (clone $unfiltered)->when($ids !== null, fn (Builder $q) => $q->whereIn('cars.id', $ids ?: [0]))->count();
+            if ($count > 0) {
+                $out[] = ['label' => $chip['label'], 'count' => $count, 'url' => CatalogFilters::urlWithout($request, $chip)];
+            }
+        }
+        usort($out, fn ($a, $b) => $b['count'] <=> $a['count']);
+
+        return array_slice($out, 0, 3);
     }
 }
