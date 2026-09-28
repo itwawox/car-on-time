@@ -2282,3 +2282,61 @@
         object-fit: cover; object-position: top; mix-blend-mode: multiply; clip-path: inset(0 0 9% 0);
     }
 }
+
+/* ------------------------------------------------------------------
+   Первый экран главной: «сцена» с машиной под задачу и линии рельефа
+   ------------------------------------------------------------------ */
+@layer components {
+    /* Линии рельефа вместо безликой сетки — только наш, «крымский» фон */
+    .hero::after {
+        opacity: 1; -webkit-mask-image: none; mask-image: none;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600' fill='none' stroke='white' stroke-opacity='.07' stroke-width='1.2'%3E%3Cpath d='M250 280 C 260 180, 460 160, 570 240 S 580 410, 440 420 S 210 390, 250 280 Z'/%3E%3Cpath d='M226 277 C 238 161, 470 138, 597 230 S 609 428, 446 439 S 180 404, 226 277 Z'/%3E%3Cpath d='M202 274 C 215 142, 479 115, 624 221 S 638 445, 453 458 S 149 419, 202 274 Z'/%3E%3Cpath d='M178 270 C 193 122, 489 93, 652 211 S 666 463, 459 478 S 119 433, 178 270 Z'/%3E%3Cpath d='M154 267 C 170 103, 498 70, 679 202 S 695 480, 466 497 S 88 448, 154 267 Z'/%3E%3Cpath d='M130 264 C 148 84, 508 48, 706 192 S 724 498, 472 516 S 58 462, 130 264 Z'/%3E%3Cpath d='M106 261 C 126 65, 518 26, 733 182 S 753 516, 478 535 S 28 476, 106 261 Z'/%3E%3Cpath d='M82 258 C 103 46, 527 3, 760 173 S 782 533, 485 554 S -3 491, 82 258 Z'/%3E%3Cpath d='M58 254 C 81 26, 537 -19, 788 163 S 810 551, 491 574 S -33 505, 58 254 Z'/%3E%3C/svg%3E") no-repeat 78% 30% / 1100px auto;
+    }
+    .hero h1 { text-wrap: pretty; }
+    .hero-stage { display: none; }
+    @media (min-width: 1024px) {
+        .hero.has-stage .container-x { position: relative; }
+        .hero.has-stage h1 { max-width: none; width: 58%; font-size: clamp(2.25rem, 1.2rem + 2.6vw, 3.5rem); }
+        .hero.has-stage .hero-lead { max-width: 44ch; }
+        /* Воздух между строкой под сценой и формой поиска */
+        .hero.has-stage .hero-tabs { margin-top: 48px; }
+        .hero-stage { position: absolute; right: 16px; top: -24px; z-index: 1; width: 41%; display: grid; gap: 14px; }
+    }
+    @media (min-width: 1280px) { .hero-stage { right: 24px; } }
+    .hero-stage-tabs { justify-self: end; display: flex; gap: 4px; padding: 4px; border-radius: 14px; background: rgb(255 255 255 / .08); }
+    .hero-stage-tabs button {
+        height: 34px; padding: 0 12px; border: 0; border-radius: 10px; background: none; cursor: pointer;
+        color: #cfe0e9; font: inherit; font-size: .8125rem; font-weight: 600; white-space: nowrap;
+        transition: background-color .2s ease, color .2s ease;
+    }
+    .hero-stage-tabs button:hover { color: #fff; background: rgb(255 255 255 / .08); }
+    .hero-stage-tabs button[aria-pressed="true"] { background: #fff; color: var(--color-sea-800); }
+    .hero-stage-tabs button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+    .hero-stage-scene {
+        position: relative; isolation: isolate; display: block; aspect-ratio: 16 / 8; border-radius: 24px; overflow: hidden;
+        background: radial-gradient(80% 60% at 50% 88%, var(--stage-center) 0%, var(--stage-mid) 50%, var(--stage-edge) 100%);
+        box-shadow: 0 30px 60px -20px rgb(0 0 0 / .45);
+    }
+    .hero-stage-scene::after {
+        content: ''; position: absolute; left: 20%; right: 20%; bottom: 15%; height: 22px; z-index: -1;
+        border-radius: 50%; background: radial-gradient(closest-side, var(--stage-floor), transparent);
+    }
+    .hero-stage-scene img {
+        position: absolute; left: 12%; bottom: 13%; width: 76%; height: auto; aspect-ratio: 640 / 352;
+        object-fit: cover; object-position: top; mix-blend-mode: multiply; clip-path: inset(0 0 9% 0);
+        transition: opacity .3s ease, transform .5s var(--ease-out-soft);
+    }
+    /* Своё фото на прозрачном фоне — как есть: без растворения фона и без обрезки полосы со знаком */
+    .hero-stage-scene img.is-cutout { aspect-ratio: auto; height: 74%; bottom: 12%; object-fit: contain; object-position: bottom; mix-blend-mode: normal; clip-path: none; }
+    .hero-stage-scene img.is-leaving { opacity: 0; transform: translateX(24px); }
+    .hero-stage-caption { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 0; padding: 0 4px; color: #fff; }
+    .hero-stage-caption b { font-size: 1rem; }
+    .hero-stage-caption span span { margin-left: 6px; font-size: .8125rem; color: #9fbfce; }
+    .hero-stage-go {
+        display: inline-flex; align-items: center; height: 34px; padding: 0 14px; border-radius: 12px; flex: none;
+        border: 1px solid rgb(255 255 255 / .2); background: rgb(255 255 255 / .12); color: #fff; font-size: .8125rem; font-weight: 700;
+        transition: background-color .2s ease, color .2s ease;
+    }
+    .hero-stage-go:hover { background: #fff; color: var(--color-sea-800); text-decoration: none; }
+    @media (prefers-reduced-motion: reduce) { .hero-stage-scene img { transition: none; } }
+}

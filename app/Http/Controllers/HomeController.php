@@ -10,6 +10,7 @@ use App\Models\Faq;
 use App\Models\Location;
 use App\Models\Review;
 use App\Services\Seo;
+use App\Support\HeroStage;
 use App\Support\HomeScenarios;
 use App\Support\Places;
 use App\Support\Seo\SeoSettings;
@@ -21,11 +22,13 @@ class HomeController extends Controller
     public function __invoke(Seo $seo): View
     {
         $faqs = Faq::query()->published()->where('is_featured', true)->limit(8)->get();
+        $scenarios = HomeScenarios::all();
 
         return view('home', [
             'classes' => CarClass::query()->orderBy('sort')->get(),
             'bodies' => BodyType::query()->orderBy('sort')->get(),
-            'scenarios' => HomeScenarios::all(),
+            'scenarios' => $scenarios,
+            'stage' => HeroStage::slides($scenarios),
             'popular' => $this->popular(),
             'hints' => HomeScenarios::hints(),
             'cityDelivery' => $this->cityDelivery(),

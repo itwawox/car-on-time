@@ -3,10 +3,14 @@
 namespace App\Filament\Pages;
 
 use App\Filament\Concerns\RestrictedToArea;
+use App\Models\Car;
 use App\Models\Setting;
 use App\Support\BookingStages;
 use App\Support\ExpiredForm;
+use App\Support\HeroStage;
+use App\Support\HomeScenarios;
 use App\Support\Quiz;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -50,8 +54,11 @@ class SiteSettings extends Page
 
     public function mount(): void
     {
-        $this->form->fill(collect(self::quizKeys())->mapWithKeys(fn ($k) => [$k => Setting::get($k)])->all() + [
+        $stageKeys = collect(HeroStage::TABS)->keys()->flatMap(fn (string $key) => ['hero_stage_'.$key.'_tab', 'hero_stage_'.$key.'_car', 'hero_stage_'.$key.'_image']);
+        $this->form->fill(collect(self::quizKeys())->merge($stageKeys)->mapWithKeys(fn ($k) => [$k => Setting::get($k)])->all() + [
             'brand_name' => Setting::get('brand_name', 'Car on Time'),
+            'hero_stage_enabled' => HeroStage::enabled(),
+            'hero_stage_link' => Setting::get('hero_stage_link'),
             'logo_word_1' => Setting::get('logo_word_1'),
             'logo_word_2' => Setting::get('logo_word_2'),
             'logo_tagline' => Setting::get('logo_tagline'),
@@ -565,6 +572,23 @@ class SiteSettings extends Page
                         [TextInput::make('quiz_q_'.$step['name'])->label('Вопрос: '.$step['title'])->placeholder($step['title'])->columnSpanFull()],
                         array_map(fn ($o) => TextInput::make('quiz_o_'.$step['name'].'_'.$o['value'])->label('— вариант')->placeholder($o['label']), $step['options']),
                     ))->all())),
+                Section::make('Главная: сцена первого экрана')
+                    ->description('Справа от заголовка — машина под выбранную задачу. Машина не выбрана — берётся первая подходящая из сценария. Своё фото на прозрачном фоне (PNG или WebP) показывается как есть; обычное фото на белом фоне ставится на «студийную» подложку.')
+                    ->columns(3)
+                    ->columnSpanFull()
+                    ->collapsed()
+                    ->schema([
+                        Toggle::make('hero_stage_enabled')->label('Показывать сцену на главной')->columnSpan(2),
+                        TextInput::make('hero_stage_link')->label('Кнопка под сценой')->placeholder('Смотреть'),
+                        ...collect(HeroStage::TABS)->flatMap(fn (string $tab, string $key) => [
+                            TextInput::make('hero_stage_'.$key.'_tab')->label('«'.(HomeScenarios::SCENARIOS[$key][0] ?? $tab).'» — вкладка')->placeholder($tab),
+                            Select::make('hero_stage_'.$key.'_car')->label('— машина')->placeholder('Автоматически')
+                                ->options(fn () => Car::query()->published()->with('brand')->orderBy('sort')->get()->mapWithKeys(fn (Car $car) => [$car->id => $car->displayName()])->all())
+                                ->searchable(),
+                            FileUpload::make('hero_stage_'.$key.'_image')->label('— своё фото на прозрачном фоне')
+                                ->image()->disk('public')->directory('hero')->acceptedFileTypes(['image/png', 'image/webp'])->maxSize(4096),
+                        ])->all(),
+                    ]),
                 Section::make('Главная: сценарии, подсказки, приветствие')
                     ->description('Блоки «Для какой поездки?» и «Популярные машины», подсказки «Часто ищут» под формой, приветствие вернувшегося клиента. Машины, их число и цены считаются автоматически. Пусто — текст по умолчанию.')
                     ->columns(2)
