@@ -36,7 +36,7 @@ class SiteSettings extends Page
     /** Ключи текстов квиза: вопросы, варианты, кнопки. @return list<string> */
     private static function quizKeys(): array
     {
-        $keys = ['quiz_submit', 'quiz_result_title', 'quiz_label_best', 'quiz_label_cheaper', 'quiz_label_comfort'];
+        $keys = ['quiz_submit', 'quiz_need_hint', 'quiz_result_title', 'quiz_label_best', 'quiz_label_cheaper', 'quiz_label_comfort'];
         foreach (Quiz::steps() as $step) {
             $keys[] = 'quiz_q_'.$step['name'];
             foreach ($step['options'] as $o) {
@@ -545,6 +545,8 @@ class SiteSettings extends Page
                     ->collapsed()
                     ->schema(array_merge([
                         TextInput::make('quiz_submit')->label('Кнопка «Показать мои варианты»')->placeholder('Показать мои варианты'),
+                        TextInput::make('quiz_need_hint')->label('Подсказка, если не ответили на вопрос')->placeholder('Выберите ответ на вопрос «{question}» — и покажем подходящие машины')
+                            ->helperText('{question} — текст вопроса, например «Бюджет в сутки?».'),
                         TextInput::make('quiz_result_title')->label('Заголовок результата')->placeholder('Подобрали под ваши ответы'),
                         TextInput::make('quiz_label_best')->label('Метка «Лучшее совпадение»')->placeholder('Лучшее совпадение'),
                         TextInput::make('quiz_label_cheaper')->label('Метка «Дешевле»')->placeholder('Дешевле'),

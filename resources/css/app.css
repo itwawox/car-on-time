@@ -1644,6 +1644,10 @@
     .qz-num { display: grid; place-items: center; flex: none; width: 34px; height: 34px; border-radius: 10px; background: var(--color-sea-50); color: var(--color-sea); font-size: .9375rem; }
     .qz-hint { margin: 6px 0 16px 46px; color: var(--color-muted); font-size: .9375rem; }
     .qz-options { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .qz-options.is-attention { animation: shake .45s ease-in-out; }
+    .qz-options.is-attention .qz-card { border-color: var(--color-accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-accent) 18%, transparent); }
+    .qz-need { margin: 16px 0 0; padding: 10px 14px; border-radius: 12px; background: var(--color-warn-bg); color: var(--color-warn-ink); font-size: .9375rem; font-weight: 600; }
+    [data-qz-submit][aria-disabled="true"] { opacity: .6; }
     @media (min-width: 900px) { .qz-options-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } .qz-options-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
     @media (max-width: 479px) { .qz-options { grid-template-columns: 1fr; } }
     .qz-option { position: relative; }

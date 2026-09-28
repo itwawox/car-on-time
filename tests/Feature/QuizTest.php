@@ -6,6 +6,7 @@ use App\Models\BodyType;
 use App\Models\Brand;
 use App\Models\Car;
 use App\Models\CarClass;
+use App\Models\Setting;
 use App\Models\User;
 use App\Support\Fleet;
 use App\Support\QuizMatcher;
@@ -86,7 +87,17 @@ class QuizTest extends TestCase
         $this->get('/podbor/rezultat?who=business&where=sea&budget=high&kp=at')->assertOk();
     }
 
-    public function test_quiz_texts_are_editable_in_settings_page(): void
+    public function test_quiz_explains_which_question_is_left_instead_of_a_dead_button(): void
+    {
+        $page = $this->get('/podbor')->assertOk();
+        $page->assertSee('data-qz-need', false)->assertDontSee('data-qz-submit disabled', false);
+        $page->assertSee('Выберите ответ на вопрос «{question}» — и покажем подходящие машины', false);
+
+        Setting::put('quiz_need_hint', 'Ответьте: {question}');
+        $this->get('/podbor')->assertSee('data-need-text="Ответьте: {question}"', false);
+    }
+
+        public function test_quiz_texts_are_editable_in_settings_page(): void
     {
         config(['app.env' => 'local']);
         $this->actingAs(User::factory()->create());

@@ -25,12 +25,42 @@ export function initQuiz() {
     const next = form.querySelector('[data-qz-next]');
     const submit = form.querySelector('[data-qz-submit]');
     const submitCount = form.querySelector('[data-qz-submit-count]');
+    const need = form.querySelector('[data-qz-need]');
     let current = 0;
     let lastCount = null;
     let nudgePending = false;
     let dir = 1;
 
     const answered = (step) => step.querySelector('input:checked') !== null;
+    const firstUnanswered = () => steps.findIndex((s) => s.dataset.multiple !== '1' && !answered(s));
+
+    // Нажали «Показать» без ответа: ведём к вопросу, варианты качнутся, под ними — что нужно сделать
+    function askFor(index) {
+        show(index);
+        const step = steps[index];
+        const title = step.querySelector('.qz-title')?.lastChild?.textContent.trim() ?? '';
+        if (need) {
+            need.textContent = (form.dataset.needText || 'Выберите ответ на вопрос «{question}»').replace('{question}', title);
+            need.hidden = false;
+        }
+        const options = step.querySelector('.qz-options');
+        options?.classList.remove('is-attention');
+        void options?.offsetWidth;
+        options?.classList.add('is-attention');
+        step.querySelector('input')?.focus({ preventScroll: true });
+    }
+    function clearNeed() {
+        if (need) need.hidden = true;
+        form.querySelectorAll('.qz-options.is-attention').forEach((el) => el.classList.remove('is-attention'));
+    }
+    // Раньше общего обработчика форм (защита от двойной отправки), иначе кнопка «зависнет»
+    form.addEventListener('submit', (e) => {
+        const missing = firstUnanswered();
+        if (missing === -1) return;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        askFor(missing);
+    }, true);
 
     function show(index) {
         dir = index >= current ? 1 : -1;
@@ -47,7 +77,8 @@ export function initQuiz() {
         // «Далее» — на шаге с несколькими ответами и на уже отвеченном шаге (вернулись «Назад»)
         next.hidden = last || (step.dataset.multiple !== '1' && !answered(step));
         submit.hidden = !last;
-        submit.disabled = !steps.every((s) => s.dataset.multiple === '1' || answered(s));
+        // Кнопку не отключаем: по нажатию квиз сам покажет, на какой вопрос осталось ответить
+        submit.setAttribute('aria-disabled', String(firstUnanswered() !== -1));
         next.textContent = step.dataset.multiple === '1' && !answered(step) ? 'Пропустить →' : 'Далее →';
         labels(false);
         step.querySelector('input')?.focus({ preventScroll: true });
@@ -62,7 +93,7 @@ export function initQuiz() {
         if (!last && step.dataset.multiple === '1' && answered(step)) {
             next.textContent = lastCount ? `Далее — подходит ${cars(lastCount)} →` : 'Далее →';
         }
-        if (submitCount) submitCount.textContent = last && lastCount ? ` · ${cars(lastCount)}` : '';
+        if (submitCount) submitCount.textContent = last && answered(step) && lastCount ? ` · ${cars(lastCount)}` : '';
         if (nudgePending && allowNudge) {
             nudgePending = false;
             nudge(last ? submit : next);
@@ -85,6 +116,7 @@ export function initQuiz() {
     // Автопереход после выбора одного варианта
     form.addEventListener('change', (e) => {
         changed = true;
+        clearNeed();
         const step = e.target.closest('[data-qz-step]');
         count();
         if (!step) return;
@@ -125,7 +157,7 @@ export function initQuiz() {
     }
 
     // Если пришли по «Изменить ответы» — начинаем с первого неотвеченного
-    const firstEmpty = steps.findIndex((s) => s.dataset.multiple !== '1' && !answered(s));
+    const firstEmpty = firstUnanswered();
     show(firstEmpty === -1 ? steps.length - 1 : firstEmpty);
     if (steps.some(answered)) count();
 }
