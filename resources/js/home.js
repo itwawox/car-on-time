@@ -44,6 +44,8 @@ function initHomeBar() {
         const show = !formVisible && !footerVisible;
         bar.classList.toggle('is-hidden', !show);
         document.body.classList.toggle('has-sticky-bar', show);
+        // Пока на экране форма первого экрана, плавающая кнопка чата не закрывает «Показать машины»
+        document.body.classList.toggle('fab-quiet', formVisible);
     };
     new IntersectionObserver(([e]) => { formVisible = e.isIntersecting; update(); }).observe(form);
     if (footer) new IntersectionObserver(([e]) => { footerVisible = e.isIntersecting; update(); }).observe(footer);

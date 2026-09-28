@@ -315,6 +315,7 @@
             <span class="price-from">Итого</span>
             <span data-quote-total>{{ $from ? 'от '.$fmt($from).' ₽' : 'по запросу' }}</span>
         </div>
+        <button type="button" class="icon-btn" data-fab-open aria-label="{{ \App\Models\Setting::get('fab_label', 'Написать нам') }}" aria-expanded="false">@include('partials.icon', ['name' => 'chat', 'size' => 20])</button>
         @if($phoneRaw)
             <a class="icon-btn" href="tel:{{ $phoneRaw }}" aria-label="Позвонить">@include('partials.icon', ['name' => 'phone', 'size' => 20])</a>
         @endif

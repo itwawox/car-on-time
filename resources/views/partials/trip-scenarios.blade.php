@@ -20,7 +20,7 @@
                         <span class="trip-title"><span class="trip-icon">@include('partials.icon', ['name' => $s['icon'], 'size' => 18])</span>{{ $s['title'] }}</span>
                         <span class="trip-text">{{ $s['text'] }}</span>
                         <span class="trip-foot">
-                            <span>{{ $s['count'] }} {{ trans_choice('машина|машины|машин', $s['count']) }}@if($s['price']) · от <b>{{ $fmt($s['price']) }} ₽</b>@endif</span>
+                            <span>{{ $s['count'] }} {{ trans_choice('машина|машины|машин', $s['count']) }}@if($s['price']) · <span class="whitespace-nowrap">от <b>{{ $fmt($s['price']) }} ₽</b></span>@endif</span>
                             <span class="trip-go" aria-hidden="true">@include('partials.icon', ['name' => 'arrow-right', 'size' => 18])</span>
                         </span>
                     </span>

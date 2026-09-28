@@ -178,8 +178,9 @@
 {{-- Телефон: главное действие под большим пальцем, появляется, когда форма первого экрана ушла из вида --}}
 <div class="sticky-bar home-bar is-hidden" data-home-bar>
     <div class="flex items-center gap-2">
-        <a class="btn btn-secondary flex-1" href="#panel-dates" data-home-bar-dates>@include('partials.icon', ['name' => 'calendar', 'size' => 18]) Даты и место</a>
-        <a class="btn btn-accent flex-1" href="{{ route('quiz') }}">Подобрать машину</a>
+        <a class="btn btn-accent flex-1 min-w-0" href="{{ route('quiz') }}">Подобрать машину</a>
+        <a class="icon-btn" href="#panel-dates" data-home-bar-dates aria-label="Даты и место">@include('partials.icon', ['name' => 'calendar', 'size' => 20])</a>
+        <button type="button" class="icon-btn" data-fab-open aria-label="{{ \App\Models\Setting::get('fab_label', 'Написать нам') }}" aria-expanded="false">@include('partials.icon', ['name' => 'chat', 'size' => 20])</button>
     </div>
 </div>
 @endpush

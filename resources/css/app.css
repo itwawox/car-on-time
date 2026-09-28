@@ -303,6 +303,8 @@
     .tile-grid { display: grid; gap: 12px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
     @media (min-width: 768px) { .tile-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; } }
     @media (min-width: 1024px) { .tile-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+    /* 5, 6 или 9 плиток — по три в ряд, без «дыр» в последней строке */
+    @media (min-width: 1024px) { .tile-grid:has(> :nth-child(5):last-child, > :nth-child(6):last-child, > :nth-child(9):last-child) { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 
     .tile {
         display: flex; flex-direction: column; justify-content: space-between; gap: 16px;
@@ -652,7 +654,7 @@
 
     /* Footer */
     .site-footer { background: var(--color-footer); color: #c9dae3; margin-top: 48px; }
-    @media (min-width: 1024px) { .site-footer { margin-top: 80px; } }
+    @media (min-width: 1024px) { .site-footer { margin-top: 56px; } }
     .site-footer a { color: #e7f0f5; transition: color .2s ease; }
     .site-footer a:hover { color: #fff; text-decoration: underline; text-underline-offset: 3px; }
     .footer-grid { display: grid; gap: 32px; padding-block: 48px 32px; grid-template-columns: minmax(0, 1fr); }
@@ -779,6 +781,14 @@
     .spec-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; background: var(--color-line); border-radius: 16px; overflow: hidden; border: 1px solid var(--color-line); margin: 0; }
     @media (min-width: 768px) { .spec-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
     .spec-grid > div { background: var(--color-surface); padding: 14px 16px; }
+    /* Последняя строка без пустых клеток: последний пункт растягивается на остаток ряда */
+    .spec-grid > :last-child:nth-child(odd) { grid-column: span 2; }
+    @media (min-width: 768px) {
+        .spec-grid > :last-child:nth-child(odd) { grid-column: auto; }
+        .spec-grid > :last-child:nth-child(4n+1) { grid-column: span 4; }
+        .spec-grid > :last-child:nth-child(4n+2) { grid-column: span 3; }
+        .spec-grid > :last-child:nth-child(4n+3) { grid-column: span 2; }
+    }
     /* Линии сетки — обводкой ячеек: неполный последний ряд остаётся белым, без серых «дыр» */
     .spec-grid { background: var(--color-surface); }
     .spec-grid > div { outline: 1px solid var(--color-line); }
@@ -907,6 +917,14 @@
         .contact-fab { right: 24px; bottom: 24px; }
         .has-sticky-bar .contact-fab { bottom: 24px; }
     }
+    /* Телефон: один плавающий слой. С нижней панелью кнопка чата — в панели, меню открывается над ней */
+    @media (max-width: 1023px) {
+        .has-sticky-bar .contact-fab-toggle { display: none; }
+        .contact-fab { transition: opacity .2s ease, transform .25s var(--ease-out-soft); }
+        .fab-quiet .contact-fab:not([open]) { opacity: 0; transform: translateY(12px); pointer-events: none; }
+    }
+    @media (min-width: 1024px) { [data-fab-open] { display: none; } }
+    [data-fab-open][aria-expanded="true"] { background: var(--color-selected-bg); color: var(--color-selected-ink); }
     .contact-fab-toggle {
         list-style: none; cursor: pointer; user-select: none;
         display: inline-flex; align-items: center; gap: 10px; height: 56px; padding: 0 16px;
@@ -1528,7 +1546,8 @@
     .steps-list { list-style: none; margin: 20px 0 0; padding: 0; display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); counter-reset: step; }
     .step { display: flex; gap: 14px; align-items: flex-start; padding: 18px; border-radius: var(--radius-card); background: var(--color-surface); border: 1px solid var(--color-line); }
     .step-icon { position: relative; flex: none; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: var(--color-sea-50); color: var(--color-sea); }
-    .step-num { position: absolute; top: -6px; right: -6px; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--color-sea-fill); color: #fff; font-size: .6875rem; font-weight: 700; }
+    /* Номер шага — «вырез» в углу иконки: белое кольцо отделяет его от плашки, а не накладывает сверху */
+    .step-num { position: absolute; top: -7px; right: -7px; display: grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--color-sea-fill); color: #fff; font-size: .6875rem; font-weight: 700; box-shadow: 0 0 0 2px var(--color-surface); }
     .step b { display: block; line-height: 1.3; }
     .step span:not(.step-icon):not(.step-num) { display: block; margin-top: 4px; font-size: .8125rem; color: var(--color-muted); line-height: 1.45; }
     .steps-compact { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--color-line); }
@@ -1775,6 +1794,8 @@
         .rail-wrap.at-start > .rail-prev, .rail-wrap.at-end > .rail-next { opacity: 0; pointer-events: none; }
         .rail-wrap.is-scrollable > [data-rail]:not([data-rail-free]) { cursor: grab; }
     }
+    /* Ленты мини-карточек: стрелки по центру фото, а не поверх названия и цены */
+    .rail-wrap:has(> .memory-row) > .rail-btn { top: 82px; }
     /* Маленькие ленты (фильтры, миниатюры, меню FAQ) — стрелки компактнее */
     .rail-wrap:has(> .filter-bar) > .rail-btn, .rail-wrap:has(> .car-thumbs) > .rail-btn, .rail-wrap:has(> .faq-nav) > .rail-btn { width: 32px; height: 32px; margin-top: -16px; }
     .rail-wrap:has(> .filter-bar) > .rail-prev { left: 0; }
@@ -1950,6 +1971,12 @@
     .car-h1-name { color: var(--color-ink); }
     .car-h1-post { font-weight: 500; color: var(--color-muted); }
     .car-title-actions { margin-top: 24px; }
+    /* Телефон: название во всю ширину, кнопки «избранное · поделиться · сравнить» — строкой под ним */
+    @media (max-width: 639px) {
+        .car-title-row { flex-direction: column; gap: 0; }
+        .car-h1 { margin-bottom: 12px; }
+        .car-title-actions { margin: 0 0 12px; }
+    }
 
     .quote-summary:has(.qs) { padding: 0; background: none; white-space: normal; }
     .prepay { margin: 20px 0 0; padding: 16px; border-radius: 14px; border: 1px solid var(--color-line); background: var(--color-bg); text-align: left; display: grid; gap: 8px; }
