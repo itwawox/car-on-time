@@ -21,7 +21,7 @@ class HomeScenarios
         'economy' => ['Эконом', 'Самые доступные машины', 'wallet', ['class' => ['ekonom']]],
     ];
 
-    /** @return list<array{key: string, title: string, text: string, icon: string, count: int, price: ?int, thumb: ?string, url: string}> */
+    /** @return list<array{key: string, title: string, text: string, icon: string, count: int, price: ?int, thumb: ?string, cover_id: ?int, url: string}> */
     public static function all(): array
     {
         $fleet = Fleet::all();
@@ -49,6 +49,7 @@ class HomeScenarios
                 'count' => count($rows),
                 'price' => $prices ? min($prices) : null,
                 'thumb' => $cover['thumb'] ?? null,
+                'cover_id' => $cover['id'] ?? null,
                 'url' => route('catalog').'?'.self::query($query),
             ];
         }

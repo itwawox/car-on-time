@@ -10,11 +10,12 @@
 @extends('layouts.app', ['jsonld' => $jsonld ?? [], 'title' => $title ?? null, 'description' => $description ?? null])
 
 @section('content')
-<section class="hero">
+<section @class(['hero', 'has-stage' => ! empty($stage)])>
     <div class="container-x">
+        @include('partials.hero-stage')
         <div class="hero-anim">
             <span class="eyebrow">@include('partials.icon', ['name' => 'pin', 'size' => 14, 'stroke' => 2]) {{ Setting::get('hero_eyebrow', 'Крым · доставка по полуострову') }}</span>
-            <h1>{{ Setting::get('hero_title', 'Аренда авто в Крыму без предоплаты') }}</h1>
+            <h1>{{ \App\Support\Typography::nbsp(Setting::get('hero_title', 'Аренда авто в Крыму без предоплаты')) }}</h1>
             <p class="hero-lead">{{ str_replace(':count', $count, Setting::get('hero_lead', 'Car on Time — агент проката. :count автомобилей, доставка по полуострову, подтверждение наличия за 15 минут. Заявки принимаем круглосуточно.')) }}</p>
 
             @include('partials.hero-booking')

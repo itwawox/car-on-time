@@ -57,7 +57,45 @@ function initHomeBar() {
     });
 }
 
+// «Сцена» первого экрана: вкладка задачи меняет машину, подпись и ссылку — только по нажатию, без карусели
+function initHeroStage() {
+    const stage = document.querySelector('[data-hero-stage]');
+    if (!stage) return;
+    const img = stage.querySelector('[data-stage-img]');
+    const title = stage.querySelector('[data-stage-title]');
+    const meta = stage.querySelector('[data-stage-meta]');
+    const links = stage.querySelectorAll('[data-stage-link]');
+    const buttons = stage.querySelectorAll('[data-stage-slide]');
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Фото остальных задач подгружаем заранее — смена без пустого кадра
+    const preload = () => buttons.forEach((b) => { new Image().src = JSON.parse(b.dataset.stageSlide).image; });
+    ('requestIdleCallback' in window ? requestIdleCallback : setTimeout)(preload);
+
+    const show = (slide) => {
+        img.src = slide.image;
+        img.alt = slide.alt;
+        img.classList.toggle('is-cutout', slide.cutout);
+        title.textContent = slide.title;
+        meta.textContent = slide.meta;
+        links.forEach((a) => { a.href = slide.url; });
+    };
+
+    buttons.forEach((button) => button.addEventListener('click', () => {
+        if (button.getAttribute('aria-pressed') === 'true') return;
+        buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+        const slide = JSON.parse(button.dataset.stageSlide);
+        if (reduceMotion) { show(slide); return; }
+        img.classList.add('is-leaving');
+        setTimeout(() => {
+            show(slide);
+            requestAnimationFrame(() => img.classList.remove('is-leaving'));
+        }, 220);
+    }));
+}
+
 export function initHome() {
     initTabs();
     initHomeBar();
+    initHeroStage();
 }
