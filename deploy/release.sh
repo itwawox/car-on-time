@@ -69,7 +69,13 @@ else
 fi
 
 step "Хостинг: копия базы и режим обслуживания"
-remote "if [ -f artisan ] && [ -f .env ]; then $DEPLOY_PHP artisan backup:database && $DEPLOY_PHP artisan down --retry=30 || true; else echo 'Первая выкладка — пропускаем'; fi"
+# Без свежей копии базы не выкладываем: миграции могут изменить данные
+remote "if [ -f artisan ] && [ -f .env ]; then
+    $DEPLOY_PHP artisan backup:database || { echo 'Не удалось сделать копию базы — выкладка остановлена, сайт не тронут.'; exit 1; }
+    $DEPLOY_PHP artisan down --retry=30
+else
+    echo 'Первая выкладка — пропускаем'
+fi"
 
 step "Записываем версию"
 DEPLOY_COMMIT=$(git rev-parse HEAD)
