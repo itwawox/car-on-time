@@ -398,6 +398,13 @@ function initFab() {
     if (!fab) return;
     document.addEventListener('click', (e) => { if (fab.open && !fab.contains(e.target)) fab.open = false; });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && fab.open) fab.open = false; });
+    // На телефоне с нижней панелью своя кнопка чата живёт в панели — одна плавающая полоса вместо двух слоёв
+    const openers = document.querySelectorAll('[data-fab-open]');
+    openers.forEach((btn) => btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        fab.open = !fab.open;
+    }));
+    fab.addEventListener('toggle', () => openers.forEach((btn) => btn.setAttribute('aria-expanded', String(fab.open))));
 }
 
 // Скелетоны картинок: мерцающий фон, пока фото грузится
