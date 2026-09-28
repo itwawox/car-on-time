@@ -2,6 +2,7 @@
 
 use App\Models\IntegrationLog;
 use App\Models\SearchQuery;
+use App\Support\Backups;
 use App\Support\SystemHealth;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
@@ -26,7 +27,7 @@ Schedule::command('bookings:remind')->hourlyAt(5)->between('9:00', '21:00');
 Schedule::command('documents:prune')->dailyAt('04:10');
 
 // Резервная копия базы каждую ночь; хранятся последние 14
-Schedule::command('backup:database')->dailyAt('03:30')->withoutOverlapping();
+Schedule::command('backup:database --source=schedule')->dailyAt(Backups::NIGHTLY_AT)->withoutOverlapping();
 
 // Очередь без отдельного supervisor: CRM, SMS и прочие внешние вызовы разбираются каждую минуту
 Schedule::command('queue:work --stop-when-empty --max-time=55 --sleep=3')

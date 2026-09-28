@@ -4,7 +4,6 @@ namespace App\Support;
 
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\File;
 
 /**
  * Состояние фоновой работы сайта: свежесть резервной копии базы и срабатывание планировщика (CRON).
@@ -27,21 +26,7 @@ final class SystemHealth
     /** @return array{name: string, size: int, at: CarbonImmutable}|null */
     public static function lastBackup(): ?array
     {
-        $dir = storage_path('backups');
-        if (! File::isDirectory($dir)) {
-            return null;
-        }
-
-        $file = collect(File::files($dir))
-            ->filter(fn ($file) => str_starts_with($file->getFilename(), 'db-'))
-            ->sortByDesc(fn ($file) => $file->getMTime())
-            ->first();
-
-        return $file === null ? null : [
-            'name' => $file->getFilename(),
-            'size' => (int) $file->getSize(),
-            'at' => CarbonImmutable::createFromTimestamp($file->getMTime(), config('app.timezone')),
-        ];
+        return Backups::files()->first();
     }
 
     public static function backupIsFresh(): bool

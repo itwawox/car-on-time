@@ -2,7 +2,9 @@
 
 namespace App\Filament\Widgets;
 
+use App\Filament\Resources\BackupRuns\BackupRunResource;
 use App\Models\User;
+use App\Support\Backups;
 use App\Support\SystemHealth;
 use Filament\Support\Icons\Heroicon;
 use Filament\Widgets\StatsOverviewWidget;
@@ -26,7 +28,9 @@ class SystemHealthOverview extends StatsOverviewWidget
 
     protected function getStats(): array
     {
-        return [$this->backupStat(), $this->schedulerStat()];
+        $url = BackupRunResource::getUrl();
+
+        return [$this->backupStat()->url($url), $this->schedulerStat()->url($url)];
     }
 
     private function backupStat(): Stat
@@ -43,7 +47,7 @@ class SystemHealthOverview extends StatsOverviewWidget
 
         return Stat::make('Последняя копия базы', $backup['at']->diffForHumans())
             ->description($fresh
-                ? $backup['at']->format('d.m H:i').' · '.$this->size($backup['size']).' · хранятся последние 14'
+                ? $backup['at']->format('d.m H:i').' · '.Backups::humanSize($backup['size']).' · хранятся последние 14'
                 : 'Копия устарела: проверьте CRON и журнал ошибок')
             ->descriptionIcon($fresh ? Heroicon::CheckCircle : Heroicon::ExclamationTriangle)
             ->color($fresh ? 'success' : 'danger');
@@ -60,12 +64,5 @@ class SystemHealthOverview extends StatsOverviewWidget
                 : 'CRON не запускается: в панели хостинга нужно задание «…/artisan schedule:run» каждую минуту')
             ->descriptionIcon($alive ? Heroicon::CheckCircle : Heroicon::ExclamationTriangle)
             ->color($alive ? 'success' : 'danger');
-    }
-
-    private function size(int $bytes): string
-    {
-        return $bytes >= 1024 * 1024
-            ? number_format($bytes / 1024 / 1024, 1, ',', ' ').' МБ'
-            : max(1, (int) round($bytes / 1024)).' КБ';
     }
 }
