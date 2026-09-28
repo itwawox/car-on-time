@@ -47,8 +47,8 @@ class SearchController extends Controller
             'cars' => $cars,
             'meta' => $meta,
             'filters' => $filters,
-            'classes' => CarClass::query()->orderBy('sort')->get(),
-            'bodies' => BodyType::query()->orderBy('sort')->get(),
+            'classes' => CarClass::query()->withCars()->orderBy('sort')->get(),
+            'bodies' => BodyType::query()->withCars()->orderBy('sort')->get(),
             'popular' => $cars->total() === 0 ? $search->popularBrands() : [],
         ]);
     }

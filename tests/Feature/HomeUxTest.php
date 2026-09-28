@@ -61,7 +61,7 @@ class HomeUxTest extends TestCase
             ->assertSee('Часто ищут:')
             ->assertSee('Без предоплаты')
             ->assertDontSee('aria-label="Преимущества"', false)
-            ->assertSeeInOrder(['Для какой поездки?', 'Популярные машины', 'Как это работает'])
+            ->assertSeeInOrder(['Популярные машины', 'Для какой поездки?', 'Как это работает'])
             ->assertSee('id="pt-biznes"', false)
             ->assertSee('7+ мест')
             ->assertSee('data-home-bar', false)
