@@ -2,6 +2,7 @@
 
 use App\Models\IntegrationLog;
 use App\Models\SearchQuery;
+use App\Support\SystemHealth;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -38,3 +39,8 @@ Schedule::command('queue:work --stop-when-empty --max-time=55 --sleep=3')
 Schedule::call(fn () => IntegrationLog::query()->where('created_at', '<', now()->subDays(90))->delete())
     ->daily()
     ->name('integration-logs:prune');
+
+// Отметка «планировщик жив» — её показывает сводка в админке
+Schedule::call(fn () => SystemHealth::markSchedulerRun())
+    ->everyMinute()
+    ->name('scheduler:heartbeat');
