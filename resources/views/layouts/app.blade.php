@@ -186,6 +186,10 @@
 </dialog>
 
 <main id="content">
+    {{-- Форма была открыта слишком долго (419): в карточке машины сообщение стоит у самой формы --}}
+    @if($errors->has('form') && ! View::hasSection('inline_form_errors'))
+        <div class="container-x"><p class="form-expired" role="alert">{{ $errors->first('form') }}</p></div>
+    @endif
     @yield('content')
 </main>
 

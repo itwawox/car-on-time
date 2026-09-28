@@ -117,9 +117,16 @@ export function initForms() {
             const msg = form.querySelector('[data-callback-msg]');
             const button = form.querySelector('[data-submit]');
             button.disabled = true;
+            const send = () => fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' } });
             try {
-                const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' } });
-                const data = await res.json().catch(() => ({}));
+                let res = await send();
+                let data = await res.json().catch(() => ({}));
+                // Страница открыта слишком долго (419): сервер выдал свежий токен — отправляем ещё раз сами
+                if (res.status === 419 && data.token && form.elements._token) {
+                    form.elements._token.value = data.token;
+                    res = await send();
+                    data = await res.json().catch(() => ({}));
+                }
                 if (res.ok) {
                     form.innerHTML = `<p class="fab-callback-done">✓ ${form.dataset.thanks || 'Спасибо! Перезвоним в ближайшее время.'}</p>`;
                 } else {

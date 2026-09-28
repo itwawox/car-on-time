@@ -25,12 +25,26 @@ class ConditionalGet
         }
 
         if (! $response->headers->has('ETag') && is_string($content = $response->getContent()) && $content !== '') {
-            // CSRF-токен в форме уникален для посетителя — в хеш его не включаем
-            $response->setEtag(md5((string) preg_replace('/name="_token" value="[^"]*"|<meta name="csrf-token"[^>]*>/', '', $content)), true);
+            $withoutToken = (string) preg_replace('/name="_token" value="[^"]*"|<meta name="csrf-token"[^>]*>/', '', $content);
+            $response->setEtag(md5($withoutToken.$this->formToken($request)), true);
         }
 
         $response->isNotModified($request);
 
         return $response;
+    }
+
+    /**
+     * Токен форм посетителя входит в ETag: когда сессия истекла, браузер получает свежую страницу,
+     * а не 304 с кешированной формой со старым токеном (отправка такой формы — ошибка 419).
+     * Поисковым роботам токен не нужен — они не отправляют формы и получают 304 по содержимому.
+     */
+    private function formToken(Request $request): string
+    {
+        if (! $request->hasSession() || preg_match('/bot|crawl|spider|slurp/i', (string) $request->userAgent())) {
+            return '';
+        }
+
+        return (string) $request->session()->token();
     }
 }
