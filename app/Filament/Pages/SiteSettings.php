@@ -5,6 +5,7 @@ namespace App\Filament\Pages;
 use App\Filament\Concerns\RestrictedToArea;
 use App\Models\Setting;
 use App\Support\BookingStages;
+use App\Support\ExpiredForm;
 use App\Support\Quiz;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
@@ -175,6 +176,7 @@ class SiteSettings extends Page
             'phone_next_hint' => Setting::get('phone_next_hint'),
             'phone_ok_text' => Setting::get('phone_ok_text'),
             'consent_required_text' => Setting::get('consent_required_text'),
+            'form_expired_text' => Setting::get('form_expired_text'),
             'deposit_explain' => Setting::get('deposit_explain'),
             'stage_received_title' => Setting::get('stage_received_title'),
             'stage_received_text' => Setting::get('stage_received_text'),
@@ -468,6 +470,8 @@ class SiteSettings extends Page
                         TextInput::make('phone_ok_text')->label('Номер набран полностью')->placeholder('Перезвоним на этот номер'),
                         TextInput::make('deposit_explain')->label('Подсказка к строке «доставка · залог» под ценой')->placeholder('Доставка уже в сумме. Залог вносится при получении машины и полностью возвращается после сдачи'),
                         TextInput::make('consent_required_text')->label('Не отмечено согласие при отправке')->placeholder('Отметьте согласие — без него мы не можем принять заявку'),
+                        TextInput::make('form_expired_text')->label('Страница устарела (форма открыта слишком долго)')->placeholder(ExpiredForm::DEFAULT_TEXT)
+                            ->helperText('Показывается, если посетитель долго не отправлял форму. Введённые данные сохраняются.'),
                         TextInput::make('availability_free_text')->label('Машина свободна на выбранные даты')->placeholder('Свободна на ваши даты'),
                         TextInput::make('availability_busy_text')->label('Машина занята на выбранные даты')->placeholder('На эти даты машина занята. Оставьте заявку — предложим такую же или похожую по той же цене.'),
                         TextInput::make('deposit_waiver_hint')->label('Подсказка «можно без залога» в расчёте')->placeholder('можно без залога: +{price} ₽/сут')
