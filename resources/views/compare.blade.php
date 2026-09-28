@@ -18,6 +18,13 @@
                 <a class="btn btn-primary" href="{{ route('catalog') }}">Перейти в каталог</a>
             </div>
         @else
+            @if($cars->count() === 1)
+                <p class="compare-need-more">
+                    @include('partials.icon', ['name' => 'plus', 'size' => 16])
+                    {{ \App\Models\Setting::get('compare_page_need_more') ?: 'Добавьте ещё хотя бы одну машину — сравнивать можно от двух.' }}
+                    <a href="{{ route('catalog') }}">Выбрать в каталоге</a>
+                </p>
+            @endif
             <div class="compare-tools">
                 <label class="check"><input type="checkbox" data-compare-diff> Только отличия</label>
                 <button type="button" class="clear-btn" data-compare-clear data-tooltip="{{ \App\Models\Setting::get('compare_clear_hint') ?: 'Убрать все машины из сравнения' }}">@include('partials.icon', ['name' => 'close', 'size' => 14, 'stroke' => 2.2]) {{ \App\Models\Setting::get('compare_clear') ?: 'Очистить сравнение' }}</button>

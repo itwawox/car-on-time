@@ -95,7 +95,7 @@
             <div class="catalog-views" data-catalog-views data-ids="{{ $cars->pluck('id')->implode(',') }}">
                 <div class="car-grid catalog-view-cards" data-reveal-group>
                     @foreach($cars as $car)
-                        @include('partials.car-card', ['car' => $car, 'heading' => 'h2', 'eager' => $loop->first && $cars->onFirstPage(), 'reveal' => $loop->index >= 4 ? true : null])
+                        @include('partials.car-card', ['car' => $car, 'titleTag' => 'h2', 'eager' => $loop->first && $cars->onFirstPage(), 'reveal' => $loop->index >= 4 ? true : null])
                     @endforeach
                 </div>
                 <div class="catalog-view-table">

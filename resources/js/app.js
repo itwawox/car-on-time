@@ -421,8 +421,8 @@ function initDateRangeLazy() {
 // Тема: по умолчанию системная, кнопка в шапке переключает и запоминает выбор
 function initTheme() {
     const root = document.documentElement;
-    const media = window.matchMedia('(prefers-color-scheme: dark)');
-    const isDark = () => root.dataset.theme ? root.dataset.theme === 'dark' : media.matches;
+    // По умолчанию сайт светлый; тёмная тема — только если посетитель выбрал её кнопкой
+    const isDark = () => root.dataset.theme === 'dark';
     const sync = () => {
         const dark = isDark();
         document.querySelectorAll('[data-theme-toggle]').forEach((btn) => {
@@ -438,7 +438,6 @@ function initTheme() {
         try { localStorage.setItem('theme', next); } catch { /* приватный режим */ }
         sync();
     }));
-    media.addEventListener?.('change', sync);
     sync();
 }
 

@@ -83,7 +83,7 @@
         @else
             <div class="car-grid" data-reveal-group>
                 @foreach($cars as $car)
-                    @include('partials.car-card', ['car' => $car, 'heading' => 'h2', 'eager' => $loop->first, 'reveal' => $loop->index >= 4 ? true : null])
+                    @include('partials.car-card', ['car' => $car, 'titleTag' => 'h2', 'eager' => $loop->first, 'reveal' => $loop->index >= 4 ? true : null])
                 @endforeach
             </div>
             {{ $cars->onEachSide(1)->links() }}
