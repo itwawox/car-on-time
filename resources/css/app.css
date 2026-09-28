@@ -76,6 +76,8 @@
     --shadow-xs: 0 1px 2px rgb(20 33 43 / 0.05);
     --shadow-card: 0 1px 2px rgb(20 33 43 / 0.04), 0 8px 24px rgb(20 33 43 / 0.06);
     --shadow-lift: 0 2px 4px rgb(20 33 43 / 0.05), 0 16px 40px rgb(20 33 43 / 0.10);
+    /* Тень при наведении внутри лент с прокруткой: помещается в поля ленты (16 px сверху, 36 px снизу) */
+    --shadow-rail-hover: 0 2px 4px rgb(20 33 43 / 0.05), 0 10px 22px rgb(31 95 122 / 0.13);
 
     --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -131,6 +133,7 @@
     --photo-filter: brightness(.88) contrast(1.04);
     --shadow-card: 0 1px 2px rgb(0 0 0 / .3), 0 8px 24px rgb(0 0 0 / .25);
     --shadow-lift: 0 2px 4px rgb(0 0 0 / .3), 0 16px 40px rgb(0 0 0 / .4);
+    --shadow-rail-hover: 0 2px 4px rgb(0 0 0 / .3), 0 10px 22px rgb(0 0 0 / .35);
     color-scheme: dark;
 }
 :root[data-theme="light"] { color-scheme: light; }
@@ -386,13 +389,14 @@
     .shelf {
         display: grid; grid-auto-flow: column; grid-auto-columns: 78%;
         gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory;
-        margin-inline: -16px; padding: 4px 16px 12px; scroll-padding-inline: 16px; scrollbar-width: none;
+        /* Поля под тень карточки и её подъём при наведении, снаружи — компенсация: карточки стоят на прежних местах */
+        margin: -16px -16px -24px; padding: 16px 16px 36px; scroll-padding-inline: 16px; scrollbar-width: none;
     }
     .shelf::-webkit-scrollbar { display: none; }
     .shelf > * { scroll-snap-align: start; }
     @media (min-width: 560px) { .shelf { grid-auto-columns: 46%; } }
     @media (min-width: 900px) {
-        .shelf { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; margin-inline: 0; padding: 0; }
+        .shelf { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 1fr)); overflow: visible; margin: 0; padding: 0; }
         .shelf > :nth-child(n+7) { display: none; }
     }
 
@@ -540,7 +544,8 @@
         transition: color .2s ease, background-color .2s ease;
     }
     .main-nav a:hover { color: var(--color-sea); background: var(--color-sea-50); }
-    .main-nav a[aria-current='page'] { background: var(--color-selected-bg); color: var(--color-selected-ink); box-shadow: inset 0 0 0 1px var(--color-selected-line); }
+    /* Меню: активный пункт — мягкая подложка без рамки, чтобы не спорить с главной кнопкой в шапке */
+    .main-nav a[aria-current='page'] { background: var(--color-selected-bg); color: var(--color-selected-ink); }
     .main-nav a[aria-current='page']:hover { background: var(--color-selected-bg); color: var(--color-selected-ink); }
 
     .header-actions { display: flex; align-items: center; gap: 12px; }
@@ -1267,7 +1272,12 @@
     .memory-panel .memory-block:first-of-type:not([hidden]) { margin-top: 0; }
     /* Пустая подложка не нужна: истории просмотров ещё нет */
     .memory-panel:not(:has(.memory-block:not([hidden]))) { display: none; }
-    .memory-row { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(180px, 220px); gap: 12px; overflow-x: auto; padding: 2px 2px 6px; scroll-snap-type: x mandatory; }
+    .memory-row {
+        display: grid; grid-auto-flow: column; grid-auto-columns: minmax(180px, 220px); gap: 14px;
+        overflow-x: auto; scroll-snap-type: x mandatory;
+        /* Поля внутри ленты под тень карточек (иначе прокрутка её срезает), снаружи — компенсация */
+        padding: 16px 20px 36px; margin: -16px -20px -24px; scroll-padding-inline: 20px;
+    }
     .mini-car { display: grid; gap: 4px; padding: 10px; border-radius: 16px; background: var(--color-surface); border: 1px solid var(--color-line); scroll-snap-align: start; transition: border-color .2s, transform .2s var(--ease-out-soft); }
     .mini-car:hover { border-color: var(--color-sea-100); transform: translateY(-2px); }
     .mini-car-media { display: block; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; background: var(--color-photo); filter: var(--photo-filter); }
@@ -1722,7 +1732,8 @@
     .rail-wrap:has(> .filter-bar) > .rail-prev { left: 0; }
     .rail-wrap:has(> .filter-bar) > .rail-next { right: 0; }
     /* Полка машин на широком экране — сетка, не лента */
-    @media (min-width: 900px) { .shelf[data-rail] { -webkit-mask-image: none !important; mask-image: none !important; } }
+    /* На компьютере полка — обычная сетка: без прокрутки, иначе [data-rail] обрезает тень карточек при наведении */
+    @media (min-width: 900px) { .shelf[data-rail] { overflow: visible; -webkit-mask-image: none !important; mask-image: none !important; } }
 }
 
 /* Главная 2026: подсказки, строка доверия, сценарии, вкладки, приветствие, нижняя панель */
@@ -1784,7 +1795,7 @@
     /* Телефон: популярные — лента со свайпом, а не столбец из 8 карточек */
     @media (max-width: 639px) {
         .pop-grid { display: grid; grid-auto-flow: column; grid-auto-columns: 80%; grid-template-columns: none; gap: 12px; overflow-x: auto;
-            margin-inline: -16px; padding: 4px 16px 12px; scroll-padding-inline: 16px; scroll-snap-type: x mandatory; }
+            margin: -16px -16px -24px; padding: 16px 16px 36px; scroll-padding-inline: 16px; scroll-snap-type: x mandatory; }
         .pop-grid > * { scroll-snap-align: start; }
     }
     @media (min-width: 640px) { .pop-grid[data-rail] { overflow: visible; -webkit-mask-image: none !important; mask-image: none !important; } }
@@ -2022,7 +2033,15 @@
             linear-gradient(135deg, #d4e8ec 0%, #e6f0f2 45%, #f4f7f8 100%);
     }
     @media (min-width: 768px) { .section-panel { padding: 32px 36px; } }
-    .section-panel :where(.car-card, .mini-car) { background: var(--color-surface); box-shadow: 0 1px 2px rgb(20 33 43 / .04), 0 10px 28px rgb(31 95 122 / .10); }
+    .section-panel :where(.car-card, .mini-car) {
+        background: var(--color-surface); border-color: rgb(255 255 255 / .9);
+        box-shadow: 0 1px 2px rgb(20 33 43 / .04), 0 6px 18px rgb(31 95 122 / .08);
+    }
+    .section-panel :where(.car-card, .mini-car):hover { box-shadow: 0 2px 4px rgb(20 33 43 / .05), 0 12px 28px rgb(31 95 122 / .14); }
+    /* В лентах с прокруткой тень при наведении компактнее: большая (--shadow-lift) не помещается в поля и режется ровной линией */
+    .memory-row > :hover { transform: translateY(-2px); box-shadow: var(--shadow-rail-hover); }
+    @media (max-width: 899px) { .shelf > :hover { transform: translateY(-2px); box-shadow: var(--shadow-rail-hover); } }
+    @media (max-width: 639px) { .pop-grid > :hover { transform: translateY(-2px); box-shadow: var(--shadow-rail-hover); } }
 
     .clear-btn {
         display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 14px;
