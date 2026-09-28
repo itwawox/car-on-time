@@ -17,7 +17,7 @@
 
 <section class="section" style="padding-top:20px">
     <div class="container-x page-layout">
-        <form method="get" action="{{ route('quiz.result') }}" class="page-main card qz" data-quiz data-count-url="{{ route('quiz.count') }}" data-total="{{ $total }}" style="max-width:none">
+        <form method="get" action="{{ route('quiz.result') }}" class="page-main card qz" data-quiz data-count-url="{{ route('quiz.count') }}" data-need-text="{{ \App\Models\Setting::get('quiz_need_hint') ?: 'Выберите ответ на вопрос «{question}» — и покажем подходящие машины' }}" data-total="{{ $total }}" style="max-width:none">
             <div class="qz-top">
                 <div class="qz-progress" aria-hidden="true"><span data-qz-bar></span></div>
                 <div class="qz-meta">
@@ -47,6 +47,7 @@
                 </fieldset>
             @endforeach
 
+            <p class="qz-need" data-qz-need role="alert" hidden></p>
             <div class="qz-nav">
                 <button type="button" class="btn btn-outline" data-qz-back hidden>@include('partials.icon', ['name' => 'chevron-left', 'size' => 18]) Назад</button>
                 <button type="button" class="btn btn-primary" data-qz-next hidden>Далее @include('partials.icon', ['name' => 'arrow-right', 'size' => 18])</button>
