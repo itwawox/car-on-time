@@ -1082,7 +1082,6 @@
     }
 
     /* Catalog search row */
-    .catalog-search { margin-bottom: 16px; max-width: 720px; }
 
     .understood { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
     .understood-chip {
@@ -1271,8 +1270,6 @@
 
 /* Каталог: панель, значки, подробный вид */
 @layer components {
-    .catalog-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; margin: 20px 0 24px; }
-    .catalog-toolbar > p { margin-right: auto; }
     .catalog-dates { position: relative; }
     .catalog-daterange.is-enhanced .daterange { gap: 0; }
     .catalog-daterange .daterange-trigger { min-height: 40px; padding-block: 8px; font-size: .875rem; }
@@ -1893,12 +1890,6 @@
     .field-hint-night svg { color: var(--color-sea); }
     .field-hint[hidden] { display: none; }
     [aria-invalid="true"] ~ .field-hint { display: none; }
-    @media (max-width: 767px) {
-        .catalog-toolbar.is-sticky { position: sticky; top: 64px; z-index: 30; margin-inline: -16px; padding: 10px 16px; background: var(--color-glass);
-            -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); border-bottom: 1px solid var(--color-line); transition: transform .3s var(--ease-out-soft); }
-        .catalog-toolbar.is-sticky.is-away { transform: translateY(calc(-100% - 64px)); }
-        .catalog-toolbar.is-sticky > p { flex-basis: 100%; font-size: .875rem; }
-    }
     /* Маленькие кнопки на карточках: видимые 32px, область нажатия 44px */
     .fav-toggle, .car-card .compare-toggle { position: relative; }
     .fav-toggle::after, .car-card .compare-toggle::after { content: ''; position: absolute; inset: -6px -3px; }
@@ -2339,4 +2330,83 @@
     }
     .hero-stage-go:hover { background: #fff; color: var(--color-sea-800); text-decoration: none; }
     @media (prefers-reduced-motion: reduce) { .hero-stage-scene img { transition: none; } }
+}
+
+/* ------------------------------------------------------------------
+   Каталог: командная строка вместо четырёх рядов кнопок над машинами
+   ------------------------------------------------------------------ */
+@layer components {
+    .catalog-lead { display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+    .catalog-lead.is-open { display: block; }
+    .catalog-lead-more { margin-top: 2px; padding: 0; border: 0; background: none; font: inherit; font-size: .9375rem; font-weight: 600; color: var(--color-sea); cursor: pointer; }
+    .catalog-lead-more:hover { text-decoration: underline; text-underline-offset: 3px; }
+    .catalog-lead-more[hidden] { display: none; }
+
+    .cmdbar { display: grid; gap: 10px; margin-bottom: 12px; }
+    .cmdbar-actions { display: flex; align-items: center; gap: 8px; }
+    .cmdbar :is(.filters-open, .catalog-sort select, .catalog-daterange .daterange-trigger) { height: 44px; min-height: 44px; border-radius: 12px; }
+    .catalog-sort { position: relative; display: block; }
+    .catalog-sort-icon { display: none; }
+    .catalog-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin: 10px 0 16px; }
+    .catalog-meta > p { margin-right: auto; }
+    .catalog-meta .view-toggle { display: none; }
+    .catalog-meta .place-chip[hidden] { display: none; }
+
+    /* Компьютер: одна липкая «капсула» под шапкой, как сама шапка */
+    @media (min-width: 640px) {
+        .cmdbar {
+            position: sticky; top: 84px; z-index: 30; display: flex; align-items: center; gap: 8px; padding: 8px; margin-bottom: 14px;
+            border-radius: 18px; border: 1px solid var(--color-line); background: var(--color-glass);
+            -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+            box-shadow: 0 1px 2px rgb(20 33 43 / .04), 0 10px 30px rgb(20 33 43 / .07);
+        }
+        .cmdbar .catalog-search { flex: 1; min-width: 0; }
+        .cmdbar .catalog-search .sbox-field { min-height: 44px; border-radius: 12px; }
+        .cmdbar .view-toggle { height: 44px; align-items: center; }
+        .cmdbar .view-toggle button { height: 36px; }
+        /* Классы и кузова — одной строкой с прокруткой вместо стены из двух рядов */
+        [data-cmdbar] ~ .filter-bar, [data-cmdbar] ~ .rail-wrap > .filter-bar { flex-wrap: nowrap; overflow-x: auto; }
+    }
+    @media (min-width: 640px) and (max-width: 1023px) {
+        .cmdbar .view-toggle button { padding: 0 9px; font-size: 0; gap: 0; }
+    }
+
+    /* Телефон: поиск сверху, действия — плавающей панелью под большим пальцем */
+    @media (max-width: 639px) {
+        .cmdbar-actions {
+            position: fixed; left: 12px; right: 12px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: 46;
+            padding: 6px; gap: 6px; border-radius: 20px; border: 1px solid var(--color-line); background: var(--color-glass);
+            -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: 0 12px 32px rgb(20 33 43 / .18);
+        }
+        .cmdbar-actions > * { flex: 1 1 0; min-width: 0; }
+        .cmdbar-actions .view-toggle { display: none; }
+        .cmdbar-actions .filters-open { justify-content: center; }
+        .cmdbar-actions .catalog-sort { flex: 0 0 44px; height: 44px; border-radius: 12px; border: 1px solid var(--color-line); background: var(--color-surface); color: var(--color-ink); }
+        .cmdbar-actions .catalog-sort-icon { display: grid; place-items: center; position: absolute; inset: 0; pointer-events: none; }
+        .cmdbar-actions .catalog-sort select { position: absolute; inset: 0; width: 100%; opacity: 0; }
+        .js .catalog-daterange { min-width: 0; }
+        .catalog-meta .view-toggle { display: inline-flex; }
+        .catalog-meta { flex-wrap: nowrap; }
+        .catalog-meta > p { white-space: nowrap; font-size: .9375rem; }
+        .catalog-meta .view-toggle button { font-size: .75rem; gap: 4px; }
+        .cmdbar-actions .catalog-dates { flex-grow: 1.6; }
+        .cmdbar-actions .daterange-trigger { font-size: .8125rem; }
+        .cmdbar-actions .daterange-trigger { gap: 6px; padding-inline: 10px; }
+        .cmdbar-actions .daterange-trigger > span:not(:has(svg)) { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .catalog-meta .view-toggle button { padding: 0 8px; }
+        /* Панель каталога заменяет плавающую кнопку «Написать нам»: один плавающий слой */
+        body:has(.cmdbar-actions) .contact-fab { display: none; }
+        body:has(.cmdbar-actions) .site-footer { padding-bottom: 84px; }
+    }
+
+    /* Пустая выдача: вместо тупика — какое условие убрать */
+    .relax-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+    .relax {
+        display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 14px; border-radius: 999px;
+        border: 1px solid var(--color-line); background: var(--color-surface); color: var(--color-ink); font-size: .875rem; font-weight: 600;
+        transition: border-color .2s ease, background-color .2s ease;
+    }
+    .relax b { color: var(--color-sea); }
+    .relax:hover { border-color: var(--color-sea); background: var(--color-sea-50); text-decoration: none; }
+    .catalog-empty-reset { display: inline-block; margin-top: 14px; font-size: .875rem; font-weight: 600; color: var(--color-muted); }
 }

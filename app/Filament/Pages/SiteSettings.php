@@ -221,6 +221,8 @@ class SiteSettings extends Page
             'availability_free_text' => Setting::get('availability_free_text'),
             'availability_busy_text' => Setting::get('availability_busy_text'),
             'availability_busy_card' => Setting::get('availability_busy_card'),
+            'catalog_lead_more' => Setting::get('catalog_lead_more'),
+            'catalog_relax_text' => Setting::get('catalog_relax_text'),
             'thanks_title' => Setting::get('thanks_title'),
             'thanks_steps_title' => Setting::get('thanks_steps_title'),
             'thanks_steps' => Setting::get('thanks_steps'),
@@ -484,6 +486,8 @@ class SiteSettings extends Page
                         TextInput::make('deposit_waiver_hint')->label('Подсказка «можно без залога» в расчёте')->placeholder('можно без залога: +{price} ₽/сут')
                             ->helperText('Показывается, если в «Доп. услугах» включена платная услуга со снятием залога. {price} — её цена в сутки.'),
                         TextInput::make('availability_busy_card')->label('Каталог: метка «занята»')->placeholder('Занята на эти даты'),
+                        TextInput::make('catalog_lead_more')->label('Каталог: раскрыть вводный текст')->placeholder('Подробнее'),
+                        TextInput::make('catalog_relax_text')->label('Каталог: ничего не найдено — подсказка')->placeholder('Уберите одно условие — машины найдутся:'),
                         TextInput::make('promo_link')->label('Ссылка промокода')->placeholder('Есть промокод?'),
                         TextInput::make('promo_note')->label('Пояснение к промокоду')->placeholder('Скидка сразу появится в расчёте.'),
                         TextInput::make('thanks_title')->label('«Спасибо» — заголовок')->placeholder('Заявка принята'),
