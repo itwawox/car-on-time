@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+@php($betterLabel = \App\Models\Setting::get('compare_better') ?: 'лучше')
 <section class="page-head">
     <div class="container-x">
         @include('partials.breadcrumbs')
@@ -53,8 +54,13 @@
                         @foreach($table as $row)
                             <tr @if($row['same']) data-same @endif>
                                 <th scope="row">@include('partials.icon', ['name' => $row['icon'], 'size' => 16]) {{ $row['label'] }}</th>
-                                @foreach($row['values'] as $value)
-                                    <td>{{ $value }}</td>
+                                @foreach($row['values'] as $i => $value)
+                                    <td @class(['is-best' => $row['best'] === $i])>
+                                        {{ $value }}
+                                        @if($row['best'] === $i)<span class="compare-best">{{ $betterLabel }}</span>@endif
+                                        {{-- Полоска разницы: длина — доля от наибольшего значения в строке --}}
+                                        @if(($row['bars'][$i] ?? null) !== null)<span class="compare-bar-line" style="--bar: {{ $row['bars'][$i] }}" aria-hidden="true"></span>@endif
+                                    </td>
                                 @endforeach
                             </tr>
                         @endforeach
