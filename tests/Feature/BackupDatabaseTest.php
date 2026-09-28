@@ -13,10 +13,10 @@ beforeEach(function () {
             'database' => 'car', 'username' => 'car', 'password' => 'secret',
         ],
     ]);
-    File::deleteDirectory(storage_path('backups'));
+    config(['app.backups_path' => sys_get_temp_dir().'/car-backups-'.uniqid()]);
 });
 
-afterEach(fn () => File::deleteDirectory(storage_path('backups')));
+afterEach(fn () => File::deleteDirectory(config('app.backups_path')));
 
 function fakeMysqldump(string $help): void
 {
@@ -38,7 +38,7 @@ it('turns off column statistics when mysqldump supports it', function () {
 
     Process::assertRan(fn (PendingProcess $process) => str_contains((string) $process->command, "'mysqldump'")
         && str_contains((string) $process->command, "'--column-statistics=0'"));
-    expect(File::files(storage_path('backups')))->toHaveCount(1);
+    expect(File::files(config('app.backups_path')))->toHaveCount(1);
 });
 
 it('does not pass the option to mysqldump that does not know it', function () {

@@ -79,6 +79,9 @@ return [
 
     'version_file' => base_path('version.json'),
 
+    // Резервные копии базы (backup:database) — вне public, скачиваются только владельцем из админки
+    'backups_path' => storage_path('backups'),
+
     'repository_url' => env('APP_REPOSITORY_URL', 'https://github.com/itwawox/car-on-time'),
 
     /*

@@ -10,25 +10,25 @@ use Livewire\Livewire;
 // Сводка владельца: делаются ли копии базы и жив ли планировщик (CRON) — без захода на сервер по SSH
 
 beforeEach(function () {
-    File::deleteDirectory(storage_path('backups'));
-    File::ensureDirectoryExists(storage_path('backups'));
+    config(['app.backups_path' => sys_get_temp_dir().'/car-backups-'.uniqid()]);
+    File::ensureDirectoryExists(config('app.backups_path'));
     $this->actingAs(User::factory()->create());
 });
 
-afterEach(fn () => File::deleteDirectory(storage_path('backups')));
+afterEach(fn () => File::deleteDirectory(config('app.backups_path')));
 
 function backupFile(string $name, int $bytes, DateTimeInterface $at): void
 {
-    $path = storage_path('backups/'.$name);
+    $path = config('app.backups_path').'/'.$name;
     File::put($path, str_repeat('x', $bytes));
     touch($path, $at->getTimestamp());
 }
 
 it('shows the latest database backup and warns when it is stale', function () {
-    backupFile('db-old.sql.gz', 100, now()->subDays(3));
-    backupFile('db-fresh.sql.gz', 150 * 1024, now()->subHours(2));
+    backupFile('db-2026-09-25_03-30-00.sql.gz', 100, now()->subDays(3));
+    backupFile('db-2026-09-28_03-30-00.sql.gz', 150 * 1024, now()->subHours(2));
 
-    expect(SystemHealth::lastBackup())->toMatchArray(['name' => 'db-fresh.sql.gz', 'size' => 150 * 1024])
+    expect(SystemHealth::lastBackup())->toMatchArray(['name' => 'db-2026-09-28_03-30-00.sql.gz', 'size' => 150 * 1024])
         ->and(SystemHealth::backupIsFresh())->toBeTrue();
     Livewire::test(SystemHealthOverview::class)->assertSee('Последняя копия базы')->assertSee('150 КБ');
 
