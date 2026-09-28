@@ -2429,3 +2429,19 @@
     }
 }
 @keyframes step-pop { 0% { transform: scale(1); } 45% { transform: scale(1.3); } 100% { transform: scale(1); } }
+
+/* Сравнение: полоски разницы и метка «лучше» — разница видна без чтения цифр */
+@layer components {
+    .compare-bar-line { display: block; height: 4px; margin-top: 8px; border-radius: 999px; background: var(--color-line); overflow: hidden; }
+    .compare-bar-line::before {
+        content: ''; display: block; height: 100%; width: calc(var(--bar, 0) * 100%); border-radius: inherit;
+        background: var(--color-muted); opacity: .45; transform-origin: left; animation: bar-grow .6s var(--ease-out-soft) both;
+    }
+    .is-best .compare-bar-line::before { background: var(--color-ok); opacity: 1; }
+    .compare-best {
+        display: inline-flex; align-items: center; height: 20px; margin-left: 6px; padding: 0 8px; border-radius: 999px; vertical-align: 1px;
+        background: color-mix(in oklab, var(--color-ok) 14%, transparent); color: var(--color-ok-ink); font-size: .6875rem; font-weight: 700;
+    }
+    @media (prefers-reduced-motion: reduce) { .compare-bar-line::before { animation: none; } }
+}
+@keyframes bar-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
