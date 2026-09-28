@@ -21,7 +21,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
     'power_hp', 'engine_l', 'consumption_mixed', 'trunk_l', 'clearance_mm',
     'drivetrain', 'specs_verified', 'deposit', 'min_age', 'min_experience', 'min_days', 'daily_km',
     'description', 'description_generated_at', 'seo_text', 'seo_title', 'seo_description', 'status',
-    'legacy_image', 'sort', 'search_aliases',
+    'sort', 'search_aliases',
 ])]
 class Car extends Model implements HasMedia
 {
@@ -171,19 +171,6 @@ class Car extends Model implements HasMedia
             return $webp && $conversion !== '' && $media->hasGeneratedConversion($conversion)
                 ? $media->getUrl($conversion)
                 : $media->getUrl();
-        }
-
-        if ($this->legacy_image) {
-            // В импортированных путях встречаются HTML-сущности (&#32; вместо пробела)
-            $path = html_entity_decode($this->legacy_image, ENT_QUOTES | ENT_HTML5);
-
-            // webp-копия (php artisan images:webp) — на 40–80% легче jpg/png
-            $webpPath = (string) preg_replace('/\.(jpe?g|png)$/i', '.webp', $path);
-            if ($webp && $webpPath !== $path && is_file(public_path($webpPath))) {
-                $path = $webpPath;
-            }
-
-            return asset(implode('/', array_map('rawurlencode', explode('/', $path))));
         }
 
         return null;

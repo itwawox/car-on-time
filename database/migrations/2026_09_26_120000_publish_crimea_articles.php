@@ -3,7 +3,6 @@
 use App\Models\Article;
 use App\Models\Car;
 use App\Models\Redirect;
-use App\Support\CarPhotoMatcher;
 use App\Support\WebpVariants;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\Cache;
@@ -71,7 +70,7 @@ return new class extends Migration
     {
         $car = Car::query()->where('slug', $carSlug)->first();
         $media = $car?->getFirstMedia('gallery');
-        $source = $media?->getPath() ?? ($car ? CarPhotoMatcher::legacyPath($car) : null);
+        $source = $media?->getPath();
         if (! $source || ! is_file($source)) {
             return null;
         }

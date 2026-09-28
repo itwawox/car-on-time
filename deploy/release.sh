@@ -83,8 +83,9 @@ rsync -az --delete -e "ssh -p $DEPLOY_PORT -o StrictHostKeyChecking=accept-new" 
     --exclude='.git/' --exclude='.github/' --exclude='node_modules/' --exclude='tests/' \
     --exclude='.env' --exclude='.env.*' --exclude='deploy/.env.deploy' \
     --exclude='/storage/' --exclude='/public/storage' --exclude='/public/hot' --exclude='/bootstrap/cache/' \
-    --exclude='/_legacy/' --exclude='/public/legacy-image' --exclude='/image-cars/' --exclude='/.agents/' --exclude='/.claude/' --exclude='/.grok/' \
-    --exclude='*.sqlite' --exclude='.DS_Store' --exclude='/.cursor/' --exclude='.phpunit.result.cache' --exclude='/.mcp.json' --exclude='/boost.json' \
+    --exclude='*.sqlite' --exclude='.DS_Store' --exclude='.phpunit.result.cache' \
+    --exclude='/.claude/' --exclude='/.agents/' --exclude='/.grok/' --exclude='/.cursor/' \
+    --exclude='/AGENTS.md' --exclude='/CLAUDE.md' --exclude='/PLAN.md' --exclude='/boost.json' --exclude='/.mcp.json' \
     ./ "$DEPLOY_USER@$DEPLOY_HOST:$DEPLOY_PATH/"
 
 rm -f version.json
