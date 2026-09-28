@@ -1,58 +1,59 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Car on Time
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Сайт аренды автомобилей в Крыму — [car-on-time.ru](https://car-on-time.ru): каталог с живым расчётом цены, заявка «в три поля», онлайн-предоплата, личный кабинет клиента и админка для менеджеров.
 
-## About Laravel
+## Стек
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.4, Laravel 13, MySQL
+- Админка — Filament 4
+- Витрина — Blade, Tailwind CSS 4, ванильный JavaScript, сборка Vite
+- Фоновые задачи — очередь `database` и планировщик Laravel (CRON раз в минуту)
+- Spatie Media Library, Spatie Honeypot, Laravel Scout со своим движком поиска
+- Pest, Larastan (уровень 5), Pint
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Возможности
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Каталог, фильтры, умный поиск (опечатки, транслит, не та раскладка), сравнение, избранное, подбор машины
+- Единый расчёт цены: сезонные тарифы, доставка, доп. услуги, промокоды, залог и «без залога»
+- Заявки и брони: календарь занятости, статусы, SLA ответа, CRM-экран, документы клиента и цифровой акт осмотра
+- Интеграции (включаются в админке): Битрикс24, SMS, ЮKassa, Telegram — через очередь с журналом обмена
+- Роли сотрудников: владелец, менеджер, контент-редактор
+- SEO: шаблоны мета-тегов, карта сайта, редиректы, IndexNow; тексты и цифры редактируются в админке
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Локальный запуск
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
+npm install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate
+php artisan user:owner you@example.com
+npm run dev
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Сайт рассчитан на Laravel Herd: `http://rentacar.test`, админка — `/admin`.
 
-## Contributing
+## Проверки
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+composer check    # Pint --test, Larastan, Pest
+npm run build     # если менялись стили или скрипты
+```
 
-## Code of Conduct
+Те же проверки и `composer audit` / `npm audit` запускаются в GitHub Actions на каждый Pull Request.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Выкладка
 
-## Security Vulnerabilities
+Хостинг — обычный reg.ru (без root и Node.js). Сайт собирает GitHub Actions и заливает на хостинг скриптом `deploy/release.sh`:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+| Ветка | Среда GitHub | Сайт |
+|---|---|---|
+| `dev` | `staging` | https://dev.void-web.ru |
+| `main` | `production` | https://car-on-time.ru |
 
-## License
+Перед выкладкой делается копия базы, после неё выполняются миграции и сбрасываются кэши. Секреты доступа хранятся в Settings → Environments.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Документация
+
+Подробные инструкции — в админке, раздел «Документация»: первая настройка хостинга, выкладка и откат, резервные копии, база и файлы, интеграции. Исходники — `resources/docs`.

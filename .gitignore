@@ -27,8 +27,6 @@ Homestead.json
 Homestead.yaml
 Thumbs.db
 
-# Локальные настройки Claude Code
-/.claude/settings.local.json
 
 # Резервные копии базы: персональные данные клиентов, в репозиторий нельзя
 /storage/backups
@@ -37,8 +35,12 @@ Thumbs.db
 /deploy/.env.deploy*
 !/deploy/.env.deploy.example
 
-# Исходники фото для cars:import-photos: лежат только на компьютере, в git и на сервер не попадают
-/image-cars/
-# Старый HTML-шаблон витрины и ссылка на его картинки: только на компьютере, в git и на сервер не попадают
-/_legacy/
-/public/legacy-image
+# Локальные инструменты разработчика и рабочие заметки
+/.claude/
+/.agents/
+/.grok/
+/AGENTS.md
+/CLAUDE.md
+/boost.json
+/.mcp.json
+/PLAN.md

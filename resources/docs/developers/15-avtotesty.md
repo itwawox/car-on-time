@@ -147,4 +147,3 @@ it('shows car color on the car page', function () {
 | `$this->assertSame(ожидали, получили)` | то же в старых тестах (PHPUnit) |
 | `$this->assertDatabaseHas('bookings', ['phone' => '…'])` | запись появилась в базе |
 
-Можно попросить Claude: «добавь тест на …» — он напишет его по этому же образцу.

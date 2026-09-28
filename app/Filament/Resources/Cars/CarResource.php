@@ -16,7 +16,6 @@ use Filament\Actions\BulkAction;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\SpatieMediaLibraryFileUpload;
@@ -189,13 +188,6 @@ class CarResource extends Resource
                         ->panelLayout('grid')
                         ->customProperties(fn (Get $get) => ['alt' => 'Аренда '.$get('name').' в Крыму'])
                         ->helperText('Первое фото — обложка. От 1600 px по ширине, белый фон. Превью 640 и 1280 px в webp создаются автоматически.'),
-                    Section::make('Старое фото (запасное)')
-                        ->description('Показывается, только если выше нет ни одного фото.')
-                        ->collapsed()
-                        ->compact()
-                        ->schema([
-                            FileUpload::make('legacy_image')->hiddenLabel()->image(),
-                        ]),
                 ]),
         ]);
     }

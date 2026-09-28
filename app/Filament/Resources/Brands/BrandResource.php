@@ -45,7 +45,6 @@ class BrandResource extends Resource
                 TextInput::make('slug')
                     ->required(),
                 SearchAliasesInput::make('Как ещё пишут марку: «хендай», «хундай», «бэха». Транслит и опечатки поиск понимает сам — сюда только то, что он не угадает.'),
-                TextInput::make('logo_path'),
                 SeoFields::section(),
                 TextInput::make('sort')
                     ->required()
@@ -61,8 +60,6 @@ class BrandResource extends Resource
                 TextColumn::make('name')
                     ->searchable(),
                 TextColumn::make('slug')
-                    ->searchable(),
-                TextColumn::make('logo_path')
                     ->searchable(),
                 TextColumn::make('sort')
                     ->numeric()
