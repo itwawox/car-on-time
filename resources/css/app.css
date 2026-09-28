@@ -1135,7 +1135,7 @@
     .compare-scroll { overflow-x: auto; border-radius: var(--radius-card, 16px); border: 1px solid var(--color-line); background: var(--color-surface); }
     .compare-table { width: 100%; min-width: calc(160px + var(--cols) * 220px); border-collapse: collapse; table-layout: fixed; font-size: .9375rem; }
     .compare-table th, .compare-table td { padding: 12px 16px; border-bottom: 1px solid var(--color-line); text-align: left; vertical-align: top; }
-    .compare-table thead th { vertical-align: bottom; background: var(--color-surface); }
+    .compare-table thead th { vertical-align: top; background: var(--color-surface); }
     .compare-table tbody th { width: 180px; font-weight: 500; color: var(--color-muted); font-size: .875rem; white-space: nowrap; }
     .compare-table tbody th svg { display: inline-block; vertical-align: -3px; margin-right: 4px; }
     @media (max-width: 639px) { .compare-table { min-width: calc(112px + var(--cols) * 170px); font-size: .875rem; } .compare-table tbody th, .compare-table thead th:first-child { width: 112px; white-space: normal; } .compare-table th, .compare-table td { padding: 10px; } }
@@ -1145,8 +1145,9 @@
     .compare-table colgroup, .compare-table thead th:first-child { width: 180px; }
     .only-diff .compare-table tr[data-same] { display: none; }
     .compare-car { position: relative; display: grid; gap: 8px; }
-    .compare-car-media { display: block; aspect-ratio: 16 / 9; border-radius: 12px; background: var(--color-photo); filter: var(--photo-filter); overflow: hidden; }
-    .compare-car-media img { width: 100%; height: 100%; object-fit: contain; }
+    .compare-car-media { position: relative; display: block; aspect-ratio: 16 / 9; border-radius: 12px; background: var(--color-photo); filter: var(--photo-filter); overflow: hidden; }
+    /* Картинка вписана в рамку 16:9 абсолютно: в ячейке таблицы height: 100% иначе считается от высоты ячейки, и фото сползает и обрезается */
+    .compare-car-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
     .compare-car-name { font-weight: 700; color: var(--color-ink); }
     .compare-remove { position: absolute; top: 6px; right: 6px; z-index: 1; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center;
         border: 1px solid var(--color-line); background: var(--color-surface); color: var(--color-muted); cursor: pointer; }
