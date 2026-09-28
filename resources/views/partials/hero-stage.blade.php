@@ -13,7 +13,7 @@
                         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) }}">{{ $slide['tab'] }}</button>
             @endforeach
         </div>
-        <a class="hero-stage-scene" id="hero-stage-scene" href="{{ $first['url'] }}" data-stage-link aria-live="polite">
+        <a class="hero-stage-scene" id="hero-stage-scene" href="{{ $first['url'] }}" data-stage-link data-skeleton aria-live="polite" @if($first['lqip']) style="{{ \App\Support\Lqip::style($first['lqip']) }}" @endif>
             <img @class(['is-cutout' => $first['cutout']]) src="{{ $first['image'] }}" alt="{{ $first['alt'] }}" width="1280" height="704" fetchpriority="high" data-stage-img>
         </a>
         <p class="hero-stage-caption">

@@ -2445,3 +2445,25 @@
     @media (prefers-reduced-motion: reduce) { .compare-bar-line::before { animation: none; } }
 }
 @keyframes bar-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* Размытое превью фото (LQIP): пока фото грузится, на его месте мягкая размытая машина, а не пустое место.
+   Превью — style="--lqip: url(…)" у контейнера (App\Support\Lqip), слой ::before гаснет по .is-loaded */
+@layer components {
+    .js :is(.car-card-media, .hero-stage-scene)[style*="--lqip"]:not(.is-loaded) {
+        animation: none;
+        background: radial-gradient(90% 55% at 50% 86%, var(--stage-center) 0%, var(--stage-mid) 45%, var(--stage-edge) 100%);
+    }
+    .js .car-gallery[style*="--lqip"]:not(.is-loaded) { animation: none; background: var(--color-photo); }
+    :is(.car-card-media, .hero-stage-scene, .car-gallery)[style*="--lqip"]::before {
+        content: ''; position: absolute; z-index: 0; pointer-events: none;
+        background: var(--lqip) center / 100% 100% no-repeat; filter: blur(10px); transform: scale(1.02);
+        transition: opacity .5s ease;
+    }
+    .car-card-media[style*="--lqip"]::before { left: 6%; bottom: 9%; width: 88%; aspect-ratio: 640 / 352; mix-blend-mode: multiply; clip-path: inset(0 0 9% 0); }
+    .hero-stage-scene[style*="--lqip"]::before { left: 12%; bottom: 13%; width: 76%; aspect-ratio: 640 / 352; mix-blend-mode: multiply; clip-path: inset(0 0 9% 0); }
+    .car-gallery[style*="--lqip"] { position: relative; }
+    .car-gallery[style*="--lqip"]::before { inset: 12px; background-size: contain; border-radius: 12px; }
+    :is(.car-card-media, .hero-stage-scene, .car-gallery).is-loaded::before { opacity: 0; }
+    :is(.car-card-media, .hero-stage-scene) img, .car-gallery .car-gallery-open { z-index: 1; }
+    @media (prefers-reduced-motion: reduce) { :is(.car-card-media, .hero-stage-scene, .car-gallery)[style*="--lqip"]::before { transition: none; } }
+}

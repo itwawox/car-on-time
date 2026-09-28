@@ -66,7 +66,7 @@
         <div class="car-head min-w-0">
             @php($gallery = $car->galleryImages())
             <div class="car-gallery-wrap" data-gallery>
-                <div class="card car-gallery" data-skeleton>
+                <div class="card car-gallery" data-skeleton @if($gallery && ($lqip = \App\Support\Lqip::forCar($car))) style="{{ \App\Support\Lqip::style($lqip) }}" @endif>
                     @if($gallery)
                         <button type="button" class="car-gallery-open" data-gallery-open="0" aria-label="Открыть фото на весь экран">
                             <img src="{{ $gallery[0]['src'] }}" alt="{{ $gallery[0]['alt'] }}" width="1280" height="705" data-gallery-main
