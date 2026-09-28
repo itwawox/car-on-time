@@ -17,15 +17,27 @@ class CarBadges
         'economy' => 'Экономичная',
     ];
 
+    /** Почему у машины этот значок — подсказка при наведении; совпадает с правилами в compute(). */
+    public const HINTS = [
+        'deal' => 'Самая низкая цена среди похожих машин — дешевле обычной на 10% и больше',
+        'family' => '7 мест и больше — для большой семьи или компании',
+        'mountains' => 'Полный привод и клиренс от 20 см — для горных дорог',
+        'economy' => 'Одна из самых экономичных по расходу топлива в своём классе',
+    ];
+
     /** @var array<int, ?string>|null */
     private static ?array $map = null;
 
-    /** @return array{key: string, label: string}|null */
+    /** @return array{key: string, label: string, hint: string}|null */
     public static function for(int $carId): ?array
     {
         $key = (self::$map ??= self::compute())[$carId] ?? null;
 
-        return $key ? ['key' => $key, 'label' => (string) (Setting::get('badge_'.$key) ?: self::LABELS[$key])] : null;
+        return $key ? [
+            'key' => $key,
+            'label' => (string) (Setting::get('badge_'.$key) ?: self::LABELS[$key]),
+            'hint' => (string) (Setting::get('badge_'.$key.'_hint') ?: self::HINTS[$key]),
+        ] : null;
     }
 
     public static function flush(): void

@@ -21,7 +21,7 @@
             <div class="favorites-tools">
                 <button type="button" class="btn btn-secondary btn-sm" data-share data-share-title="Мои машины — {{ \App\Models\Setting::get('brand_name', 'Car on Time') }}">@include('partials.icon', ['name' => 'share', 'size' => 16]) Поделиться списком</button>
                 <a class="btn btn-outline btn-sm" href="{{ route('compare', ['ids' => $cars->take(3)->pluck('id')->implode(',')]) }}">@include('partials.icon', ['name' => 'compare', 'size' => 16]) Сравнить первые {{ min(3, $cars->count()) }}</a>
-                <button type="button" class="btn btn-outline btn-sm" data-favorites-clear>Очистить</button>
+                <button type="button" class="clear-btn" data-favorites-clear data-tooltip="{{ \App\Models\Setting::get('favorites_clear_hint') ?: 'Убрать все машины из избранного' }}">@include('partials.icon', ['name' => 'close', 'size' => 14, 'stroke' => 2.2]) {{ \App\Models\Setting::get('favorites_clear') ?: 'Очистить избранное' }}</button>
             </div>
             <div class="car-grid">
                 @foreach($cars as $car)

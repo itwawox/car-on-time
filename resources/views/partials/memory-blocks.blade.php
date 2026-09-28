@@ -20,10 +20,15 @@
         </a>
         <button type="button" class="dismiss" data-dismiss aria-label="Закрыть" title="Закрыть">@include('partials.icon', ['name' => 'close', 'size' => 16, 'stroke' => 2.2])</button>
     </div>
+    <div class="section-panel memory-panel">
     <section class="memory-block" data-recent hidden aria-labelledby="h-recent-{{ $id ?? 'm' }}">
         <div class="memory-head">
             <h2 id="h-recent-{{ $id ?? 'm' }}">{{ $S::get('recent_title') ?: 'Вы смотрели' }}</h2>
-            <button type="button" class="memory-clear" data-recent-clear>Очистить</button>
+            <button type="button" class="clear-btn" data-recent-clear
+                    data-tooltip="{{ $S::get('recent_clear_hint') ?: 'Убрать все машины из «Вы смотрели»' }}">
+                @include('partials.icon', ['name' => 'close', 'size' => 14, 'stroke' => 2.2])
+                {{ $S::get('recent_clear') ?: 'Очистить историю' }}
+            </button>
         </div>
         <div class="memory-row" data-recent-list data-rail></div>
     </section>
@@ -33,4 +38,5 @@
             <div class="memory-row" data-similar-list data-rail></div>
         </section>
     @endif
+    </div>
 </div>

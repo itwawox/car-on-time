@@ -20,7 +20,7 @@
         @else
             <div class="compare-tools">
                 <label class="check"><input type="checkbox" data-compare-diff> Только отличия</label>
-                <button type="button" class="btn btn-outline btn-sm" data-compare-clear>Очистить</button>
+                <button type="button" class="clear-btn" data-compare-clear data-tooltip="{{ \App\Models\Setting::get('compare_clear_hint') ?: 'Убрать все машины из сравнения' }}">@include('partials.icon', ['name' => 'close', 'size' => 14, 'stroke' => 2.2]) {{ \App\Models\Setting::get('compare_clear') ?: 'Очистить сравнение' }}</button>
             </div>
             <div class="compare-scroll" data-rail data-rail-free>
                 <table class="compare-table" style="--cols: {{ $cars->count() }}">

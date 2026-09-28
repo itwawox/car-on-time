@@ -1,19 +1,26 @@
 /**
- * Подсказки у кнопок-иконок: «В избранное», «Сравнить», переключатель темы, мессенджеры, стрелки галереи.
+ * Подсказки: у кнопок-иконок («В избранное», «Сравнить», тема, мессенджеры, галерея), у значков карточек
+ * («почему „Выгодно“»), у кнопок «Очистить …» и у обрезанных названий машин (data-tooltip-overflow).
  *
- * Текст — из data-tooltip или aria-label, который у иконок и так есть для экранных читалок.
+ * Текст — из data-tooltip, aria-label (у иконок он и так есть для экранных читалок) или сам обрезанный текст.
  * Показываем при наведении мышью (с задержкой) и при переходе клавишей Tab; на телефоне не мешаем.
  * У кнопок с видимой подписью подсказки нет — она бы только дублировала текст.
  */
-const SELECTOR = '[data-tooltip], button[aria-label], a[aria-label]';
+const SELECTOR = '[data-tooltip], [data-tooltip-overflow], button[aria-label], a[aria-label]';
 const DELAY = 300;
 
 function textOf(el) {
+    if (el.hasAttribute('data-tooltip-overflow')) return el.textContent.trim();
+
     return el.dataset.tooltip || el.getAttribute('aria-label') || el.dataset.nativeTitle || '';
 }
 
+/** Текст обрезан многоточием или по числу строк — показываем его целиком. */
+const truncated = (el) => el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1;
+
 function eligible(el) {
     if (el.hasAttribute('data-no-tooltip')) return false;
+    if (el.hasAttribute('data-tooltip-overflow')) return truncated(el);
     if (el.hasAttribute('data-tooltip')) return true;
 
     return el.textContent.trim() === '' && textOf(el) !== '';
