@@ -7,7 +7,7 @@
     $titleTag = in_array($titleTag ?? null, ['h2', 'h3'], true) ? $titleTag : 'h3';
 @endphp
 <article class="card card-link car-card relative" @isset($reveal) data-reveal @endisset>
-    <a class="car-card-media" data-skeleton href="{{ route('car.show', $car->slug) }}" tabindex="-1" aria-hidden="true">
+    <a class="car-card-media" data-skeleton href="{{ route('car.show', $car->slug) }}" tabindex="-1" aria-hidden="true" @if($cover && ($lqip = \App\Support\Lqip::forCar($car))) style="{{ \App\Support\Lqip::style($lqip) }}" @endif>
         @if($cover)
             <img src="{{ $cover }}" alt="{{ $car->coverAlt() }}" width="640" height="353"
                  @if($srcset = $car->coverSrcset()) srcset="{{ $srcset }}" sizes="(min-width: 1200px) 290px, (min-width: 900px) 33vw, (min-width: 560px) 50vw, 100vw" @endif

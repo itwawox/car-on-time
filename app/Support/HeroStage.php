@@ -31,7 +31,7 @@ class HeroStage
 
     /**
      * @param  list<array{key: string, title: string, count: int, price: ?int, cover_id: ?int, url: string}>  $scenarios
-     * @return list<array{key: string, tab: string, title: string, count: int, price: ?int, url: string, image: string, alt: string, cutout: bool}>
+     * @return list<array{key: string, tab: string, title: string, count: int, price: ?int, url: string, image: string, alt: string, cutout: bool, lqip: ?string}>
      */
     public static function slides(array $scenarios): array
     {
@@ -69,6 +69,7 @@ class HeroStage
                 'image' => $image,
                 'alt' => $car?->displayName() ?? $scenario['title'],
                 'cutout' => filled($upload),
+                'lqip' => ! filled($upload) && $car ? Lqip::forCar($car) : null,
             ];
         }
 
