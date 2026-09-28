@@ -97,7 +97,7 @@ class QuizTest extends TestCase
         $this->get('/podbor')->assertSee('data-need-text="Ответьте: {question}"', false);
     }
 
-        public function test_quiz_texts_are_editable_in_settings_page(): void
+    public function test_quiz_texts_are_editable_in_settings_page(): void
     {
         config(['app.env' => 'local']);
         $this->actingAs(User::factory()->create());
