@@ -159,6 +159,9 @@ class SiteSettings extends Page
             'promo_link' => Setting::get('promo_link'),
             'promo_note' => Setting::get('promo_note'),
             'submit_note' => Setting::get('submit_note'),
+            'phone_next_hint' => Setting::get('phone_next_hint'),
+            'phone_ok_text' => Setting::get('phone_ok_text'),
+            'consent_required_text' => Setting::get('consent_required_text'),
             'stage_received_title' => Setting::get('stage_received_title'),
             'stage_received_text' => Setting::get('stage_received_text'),
             'stage_checking_title' => Setting::get('stage_checking_title'),
@@ -434,6 +437,9 @@ class SiteSettings extends Page
                     ->schema([
                         TextInput::make('extras_title')->label('Заголовок доп. услуг')->placeholder('Добавить к аренде'),
                         TextInput::make('submit_note')->label('Подпись под кнопкой')->placeholder('Без предоплаты · перезвоним за 15 минут'),
+                        TextInput::make('phone_next_hint')->label('Подсказка у телефона после расчёта цены')->placeholder('Остался один шаг — телефон. Перезвоним и подтвердим наличие'),
+                        TextInput::make('phone_ok_text')->label('Номер набран полностью')->placeholder('Перезвоним на этот номер'),
+                        TextInput::make('consent_required_text')->label('Не отмечено согласие при отправке')->placeholder('Отметьте согласие — без него мы не можем принять заявку'),
                         TextInput::make('availability_free_text')->label('Машина свободна на выбранные даты')->placeholder('Свободна на ваши даты'),
                         TextInput::make('availability_busy_text')->label('Машина занята на выбранные даты')->placeholder('На эти даты машина занята. Оставьте заявку — предложим такую же или похожую по той же цене.'),
                         TextInput::make('deposit_waiver_hint')->label('Подсказка «можно без залога» в расчёте')->placeholder('можно без залога: +{price} ₽/сут')

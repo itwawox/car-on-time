@@ -50,7 +50,7 @@
             <div class="qz-nav">
                 <button type="button" class="btn btn-outline" data-qz-back hidden>@include('partials.icon', ['name' => 'chevron-left', 'size' => 18]) Назад</button>
                 <button type="button" class="btn btn-primary" data-qz-next hidden>Далее @include('partials.icon', ['name' => 'arrow-right', 'size' => 18])</button>
-                <button type="submit" class="btn btn-accent btn-lg" data-qz-submit>{{ \App\Models\Setting::get('quiz_submit') ?: 'Показать мои варианты' }} @include('partials.icon', ['name' => 'arrow-right', 'size' => 18])</button>
+                <button type="submit" class="btn btn-accent btn-lg" data-qz-submit>{{ \App\Models\Setting::get('quiz_submit') ?: 'Показать мои варианты' }}<span data-qz-submit-count></span> @include('partials.icon', ['name' => 'arrow-right', 'size' => 18])</button>
             </div>
         </form>
         @include('partials.help-aside')

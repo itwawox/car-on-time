@@ -1,3 +1,5 @@
+import { nudge } from './nudge';
+
 /**
  * Квиз подбора: по одному вопросу на экран, прогресс, автопереход после выбора,
  * «Назад/Далее», живой счётчик подходящих машин. Без JS — обычная форма со всеми вопросами.
@@ -22,7 +24,10 @@ export function initQuiz() {
     const back = form.querySelector('[data-qz-back]');
     const next = form.querySelector('[data-qz-next]');
     const submit = form.querySelector('[data-qz-submit]');
+    const submitCount = form.querySelector('[data-qz-submit-count]');
     let current = 0;
+    let lastCount = null;
+    let nudgePending = false;
     let dir = 1;
 
     const answered = (step) => step.querySelector('input:checked') !== null;
@@ -44,7 +49,24 @@ export function initQuiz() {
         submit.hidden = !last;
         submit.disabled = !steps.every((s) => s.dataset.multiple === '1' || answered(s));
         next.textContent = step.dataset.multiple === '1' && !answered(step) ? 'Пропустить →' : 'Далее →';
+        labels(false);
         step.querySelector('input')?.focus({ preventScroll: true });
+    }
+
+    // Кнопки говорят, что будет дальше: «Далее — подходит 12 машин», «Показать мои варианты · 8 машин».
+    // Подмигивают только после выбора посетителя, когда пора нажать.
+    const cars = (n) => `${n} ${plural(n, ['машина', 'машины', 'машин'])}`;
+    function labels(allowNudge = true) {
+        const step = steps[current];
+        const last = current === steps.length - 1;
+        if (!last && step.dataset.multiple === '1' && answered(step)) {
+            next.textContent = lastCount ? `Далее — подходит ${cars(lastCount)} →` : 'Далее →';
+        }
+        if (submitCount) submitCount.textContent = last && lastCount ? ` · ${cars(lastCount)}` : '';
+        if (nudgePending && allowNudge) {
+            nudgePending = false;
+            nudge(last ? submit : next);
+        }
     }
 
     // Повторное нажатие на уже выбранный вариант: браузер не присылает change — переходим дальше сами
@@ -70,10 +92,10 @@ export function initQuiz() {
         card?.classList.remove('is-pop');
         void card?.offsetWidth;
         card?.classList.add('is-pop');
-        if (step.dataset.multiple === '1') { show(current); return; }
+        if (step.dataset.multiple === '1') { nudgePending = true; show(current); return; }
         const i = steps.indexOf(step);
         if (i < steps.length - 1) setTimeout(() => show(i + 1), 280);
-        else show(i);
+        else { nudgePending = true; show(i); }
     });
     back.addEventListener('click', () => show(current - 1));
     next.addEventListener('click', () => show(current + 1));
@@ -92,11 +114,13 @@ export function initQuiz() {
             try {
                 const res = await fetch(`${form.dataset.countUrl}?${new URLSearchParams(new FormData(form))}`, { headers: { Accept: 'application/json' }, signal: controller.signal });
                 const { count: n } = await res.json();
+                lastCount = n || null;
                 countEl.textContent = n ? `Подходит ${n} ${plural(n, ['машина', 'машины', 'машин'])}` : 'Точных совпадений нет — покажем ближайшие';
                 countEl.classList.remove('is-bump');
                 void countEl.offsetWidth;
                 countEl.classList.add('is-bump');
             } catch { /* счётчик необязателен */ }
+            labels();
         }, 150);
     }
 

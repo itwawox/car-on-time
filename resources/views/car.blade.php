@@ -246,8 +246,9 @@
                 <div>
                     <label class="field-label" for="q-phone">Телефон</label>
                     <input class="field" id="q-phone" type="tel" name="phone" value="{{ old('phone') }}" required placeholder="+7 (___) ___-__-__" autocomplete="tel" inputmode="tel"
-                           data-phone-mask aria-describedby="q-phone-error" @error('phone') aria-invalid="true" @enderror>
+                           data-phone-mask data-ok-text="{{ Setting::get('phone_ok_text') ?: 'Перезвоним на этот номер' }}" aria-describedby="q-phone-error" @error('phone') aria-invalid="true" @enderror>
                     <p class="field-error" id="q-phone-error" data-field-error>@error('phone'){{ $message }}@enderror</p>
+                    <p class="field-next" data-phone-next hidden>{{ Setting::get('phone_next_hint') ?: 'Остался один шаг — телефон. Перезвоним и подтвердим наличие' }}</p>
                 </div>
                 @include('partials.pd-consent', ['id' => 'q-consent'])
                 @if($errors->any() && ! $errors->has('phone') && ! $errors->has('pd_consent'))
