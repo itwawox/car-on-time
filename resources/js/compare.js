@@ -36,6 +36,11 @@ function render() {
         if (label) label.textContent = on ? 'В сравнении' : 'Сравнить';
         btn.title = on ? 'Убрать из сравнения' : 'Сравнить';
         btn.setAttribute('aria-label', btn.title);
+        // В карточке кнопка — только иконка: подсказка говорит и состояние
+        if (btn.closest('.car-card')) {
+            btn.dataset.tooltip = on ? 'В сравнении — нажмите, чтобы убрать'
+                : (list.length >= LIMIT ? `Уже ${LIMIT} из ${LIMIT} — уберите одну, чтобы добавить` : 'Добавить к сравнению');
+        }
     });
 
     if (document.querySelector('[data-compare-page]')) return; // на самой странице сравнения панель не нужна
@@ -57,7 +62,7 @@ function render() {
     bar.innerHTML = `
         <span class="compare-bar-count">Сравнение: <b>${list.length}</b> из ${LIMIT}</span>
         <span class="compare-bar-names">${list.map((c) => escapeHtml(c.name)).join(' · ')}</span>
-        <button type="button" class="compare-bar-clear" data-compare-bar-clear aria-label="Очистить сравнение">Очистить</button>
+        <button type="button" class="clear-btn compare-bar-clear" data-compare-bar-clear data-tooltip="Убрать все машины из сравнения">Сбросить</button>
         <a class="btn btn-primary btn-sm" href="${url(list)}">${list.length > 1 ? 'Сравнить' : 'Добавьте ещё'}</a>`;
     requestAnimationFrame(() => bar.classList.add('is-open'));
 }

@@ -191,7 +191,7 @@
                     <span class="quote-price-days" data-quote-days></span>
                 </div>
                 @if($from)<span class="quote-price-day" data-quote-per-day>{{ $fmt($from) }} ₽/сут</span>@endif
-                <p class="quote-line" data-quote-line aria-live="polite" hidden></p>
+                <p class="quote-line" data-quote-line aria-live="polite" hidden data-tooltip="{{ Setting::get('deposit_explain') ?: 'Доставка уже в сумме. Залог вносится при получении машины и полностью возвращается после сдачи' }}"></p>
             </div>
             <p class="qs-avail" data-quote-avail hidden></p>
 

@@ -14,7 +14,7 @@
             <span class="grid h-full place-items-center text-sea-100">@include('partials.icon', ['name' => 'car', 'size' => 56, 'stroke' => 1.4])</span>
         @endif
     </a>
-    @if($badge)<span class="car-badge car-badge-{{ $badge['key'] }}">{{ $badge['label'] }}</span>@endif
+    @if($badge)<span class="car-badge car-badge-{{ $badge['key'] }}" data-tooltip="{{ $badge['hint'] }}">{{ $badge['label'] }}</span>@endif
     <div class="car-card-actions">
         <button type="button" class="fav-toggle" data-fav-toggle="{{ $car->id }}" aria-pressed="false" aria-label="В избранное" title="В избранное">@include('partials.icon', ['name' => 'heart', 'size' => 16])</button>
         <button type="button" class="compare-toggle" data-compare-toggle="{{ $car->id }}" data-compare-name="{{ $car->displayName() }}" aria-pressed="false" aria-label="Сравнить" title="Сравнить">
@@ -25,7 +25,7 @@
         <{{ $heading ?? 'h3' }} class="car-card-title"><a href="{{ route('car.show', $car->slug) }}">{{ $car->displayName() }}</a></{{ $heading ?? 'h3' }}>
         <div class="flex flex-wrap gap-1.5">
             <span class="chip">@include('partials.icon', ['name' => 'gearbox', 'size' => 12]) {{ $car->fuel === 'electric' ? 'Электро' : $car->gearboxLabel() }}</span>
-            @if($car->seats)<span class="chip">@include('partials.icon', ['name' => 'seats', 'size' => 12]) {{ $car->seats }}</span>@endif
+            @if($car->seats)<span class="chip">@include('partials.icon', ['name' => 'seats', 'size' => 12]) {{ $car->seats }} {{ trans_choice('место|места|мест', (int) $car->seats) }}</span>@endif
             @if($car->drivetrain === '4wd')<span class="chip">@include('partials.icon', ['name' => 'drive', 'size' => 12]) 4WD</span>@endif
             @if($car->relationLoaded('classes') && $car->classes->first())
                 <span class="chip">{{ $car->classes->first()->name }}</span>

@@ -18,7 +18,7 @@ const money = (n) => Number(n).toLocaleString('ru-RU');
 function card(car) {
     return `<a class="mini-car" href="${esc(car.url)}">
         <span class="mini-car-media">${car.thumb ? `<img src="${esc(car.thumb)}" alt="" width="160" height="88" loading="lazy" decoding="async">` : ''}</span>
-        <span class="mini-car-name">${esc(car.name)}</span>
+        <span class="mini-car-name" data-tooltip-overflow>${esc(car.name)}</span>
         ${car.meta ? `<span class="mini-car-meta">${esc(car.meta)}</span>` : ''}
         ${car.price ? `<span class="mini-car-price">от ${money(car.price)} ₽<small>/сут</small></span>` : ''}
     </a>`;
