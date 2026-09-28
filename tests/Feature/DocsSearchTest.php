@@ -19,7 +19,7 @@ it('finds lessons by another word form, typo, translit and wrong keyboard layout
     expect(docsTitles($query))->toContain($title);
 })->with([
     'word form' => ['тестов', 'Что такое тесты и как они работают'],
-    'typo' => ['миграцыи', 'Папки проекта'],
+    'typo' => ['миграцыи', 'Структура проекта'],
     'translit' => ['ларастан', 'Larastan — поиск ошибок без запуска'],
     'wrong layout' => ['дфкфыефт', 'Larastan — поиск ошибок без запуска'],
 ]);
