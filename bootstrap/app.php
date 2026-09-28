@@ -3,10 +3,12 @@
 use App\Http\Middleware\ConditionalGet;
 use App\Http\Middleware\HandleRedirects;
 use App\Http\Middleware\SecurityHeaders;
+use App\Support\ExpiredForm;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -25,4 +27,6 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->shouldRenderJsonWhen(
             fn (Request $request) => $request->is('api/*') || $request->expectsJson(),
         );
+        // Форма открыта слишком долго (419): назад к форме с данными, а не голая страница ошибки
+        $exceptions->render(fn (HttpException $e, Request $request) => ExpiredForm::render($e, $request));
     })->create();

@@ -763,6 +763,7 @@
     }
     .quote-error:empty { display: none; }
     .quote-error { color: var(--color-danger); font-size: .875rem; margin: 8px 0 0; }
+    .form-expired { margin: 16px 0 0; padding: 12px 14px; border-radius: 12px; font-size: .9375rem; color: var(--color-ink); background: color-mix(in oklab, var(--color-danger) 10%, var(--color-surface)); border: 1px solid color-mix(in oklab, var(--color-danger) 30%, transparent); }
 
     /* Quiz */
     .quiz-step { border: 0; padding: 0; margin: 0 0 28px; min-width: 0; }

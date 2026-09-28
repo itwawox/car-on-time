@@ -51,6 +51,8 @@
 
 @section('body_class', 'has-sticky-bar')
 
+@section('inline_form_errors', '1')
+
 @section('content')
 <section class="page-head">
     <div class="container-x">
@@ -213,11 +215,11 @@
                 <div class="daterange-fields" data-daterange data-times="popover" data-min-days="{{ max(1, (int) $car->min_days) }}">
                     <div>
                         <label class="field-label" for="q-start">Начало</label>
-                        <input class="field" id="q-start" type="datetime-local" name="starts_at" value="{{ $startDefault->format('Y-m-d\TH:i') }}" min="{{ now()->format('Y-m-d\T00:00') }}" required data-quote-input>
+                        <input class="field" id="q-start" type="datetime-local" name="starts_at" value="{{ old('starts_at', $startDefault->format('Y-m-d\TH:i')) }}" min="{{ now()->format('Y-m-d\T00:00') }}" required data-quote-input>
                     </div>
                     <div>
                         <label class="field-label" for="q-end">Окончание</label>
-                        <input class="field" id="q-end" type="datetime-local" name="ends_at" value="{{ $endDefault->format('Y-m-d\TH:i') }}" min="{{ now()->format('Y-m-d\T00:00') }}" required data-quote-input>
+                        <input class="field" id="q-end" type="datetime-local" name="ends_at" value="{{ old('ends_at', $endDefault->format('Y-m-d\TH:i')) }}" min="{{ now()->format('Y-m-d\T00:00') }}" required data-quote-input>
                     </div>
                 </div>
                 @if((int) $car->min_days > 1)
