@@ -25,8 +25,8 @@ class HomeController extends Controller
         $scenarios = HomeScenarios::all();
 
         return view('home', [
-            'classes' => CarClass::query()->orderBy('sort')->get(),
-            'bodies' => BodyType::query()->orderBy('sort')->get(),
+            'classes' => CarClass::query()->withCars()->orderBy('sort')->get(),
+            'bodies' => BodyType::query()->withCars()->orderBy('sort')->get(),
             'scenarios' => $scenarios,
             'stage' => HeroStage::slides($scenarios),
             'popular' => $this->popular(),

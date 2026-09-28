@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\BodyType;
 use App\Models\Brand;
 use App\Models\Car;
 
@@ -35,4 +36,14 @@ it('does not suggest dropping a filter that still leaves nothing', function () {
 
 it('shows no suggestions when cars are found', function () {
     $this->get('/katalog?seats=7')->assertOk()->assertSee('Найдено 1 авто')->assertDontSee('Убрать «');
+});
+
+it('hides body types without published cars from the catalog', function () {
+    $sedan = BodyType::query()->create(['slug' => 'sedan', 'name' => 'Седан', 'sort' => 1]);
+    BodyType::query()->create(['slug' => 'elektro', 'name' => 'Электро', 'sort' => 2]);
+    Car::query()->where('slug', 'rio')->update(['body_type_id' => $sedan->id]);
+
+    $this->get('/katalog')->assertOk()
+        ->assertSee(route('kuzov', 'sedan'), false)
+        ->assertDontSee(route('kuzov', 'elektro'), false);
 });

@@ -54,9 +54,10 @@
 
 <div class="container-x home-memory">@include('partials.memory-blocks', ['similar' => true, 'resume' => true, 'welcome' => true, 'id' => 'home'])</div>
 
-@include('partials.trip-scenarios')
-
+{{-- Задачи уже есть на первом экране («сцена»), поэтому сначала конкретные машины, потом подборки по задачам --}}
 @include('partials.popular-tabs')
+
+@include('partials.trip-scenarios')
 
 @php($homePromos = \App\Models\Promotion::query()->active()->limit(3)->get())
 @if($homePromos->isNotEmpty())

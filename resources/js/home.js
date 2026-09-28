@@ -94,8 +94,22 @@ function initHeroStage() {
     }));
 }
 
+// «Как это работает»: шаги загораются по очереди, когда блок появился на экране — один раз
+function initStepsFlow() {
+    const list = document.querySelector('[data-steps-flow]');
+    if (!list) return;
+    if (!('IntersectionObserver' in window)) { list.classList.add('is-lit'); return; }
+    const io = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) return;
+        list.classList.add('is-lit');
+        io.disconnect();
+    }, { threshold: 0.6 });
+    io.observe(list);
+}
+
 export function initHome() {
     initTabs();
     initHomeBar();
     initHeroStage();
+    initStepsFlow();
 }
