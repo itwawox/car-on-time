@@ -2247,3 +2247,38 @@
     .compare-table { min-width: 0 !important; }
     .compare-table tbody th { position: static; }
 }
+
+/* ------------------------------------------------------------------
+   «Студия» для фото машин: общая подложка с тенью пола вместо белых
+   прямоугольников. Фото — белый фон 640×352, знак «car-on-time.ru»
+   в нижней полосе: белый растворяется (multiply), полоса со знаком
+   срезается. Большая галерея в карточке машины показывает фото целиком.
+   ------------------------------------------------------------------ */
+:root {
+    --stage-center: #d3e1e5;
+    --stage-mid: #e6eef0;
+    --stage-edge: #f3f7f8;
+    --stage-floor: rgb(18 44 56 / .30);
+}
+:root[data-theme="dark"] {
+    /* Светлый «лайтбокс» и в тёмной теме: на тёмном фоне multiply сделал бы машины чёрными */
+    --stage-center: #b4c5cc;
+    --stage-mid: #c6d3d8;
+    --stage-edge: #d2dde1;
+    --stage-floor: rgb(8 20 26 / .38);
+}
+@layer components {
+    :is(.car-card-media, .mini-car-media, .trip-media, .alt-media, .compare-car-media) {
+        position: relative; isolation: isolate; border-bottom: 0;
+        background: radial-gradient(90% 55% at 50% 86%, var(--stage-center) 0%, var(--stage-mid) 45%, var(--stage-edge) 100%);
+    }
+    :is(.car-card-media, .mini-car-media, .trip-media, .alt-media, .compare-car-media)::after {
+        content: ''; position: absolute; left: 16%; right: 16%; bottom: 12%; height: 12%; max-height: 16px; z-index: -1;
+        border-radius: 50%; background: radial-gradient(closest-side, var(--stage-floor), transparent);
+    }
+    :is(.car-card-media, .mini-car-media, .trip-media, .alt-media, .compare-car-media) img {
+        position: absolute; left: 6%; bottom: 9%; inset-inline-end: auto; top: auto;
+        width: 88%; height: auto; aspect-ratio: 640 / 352; padding: 0;
+        object-fit: cover; object-position: top; mix-blend-mode: multiply; clip-path: inset(0 0 9% 0);
+    }
+}
