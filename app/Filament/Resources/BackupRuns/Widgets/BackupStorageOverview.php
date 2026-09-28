@@ -24,7 +24,9 @@ class BackupStorageOverview extends StatsOverviewWidget
             Stat::make('Копий на сервере', $files->count().' из '.Backups::KEEP)
                 ->description($files->isEmpty() ? 'Пока ни одной' : 'Самая старая — '.$files->last()['at']->format('d.m.Y H:i')),
             Stat::make('Занимают', Backups::humanSize(Backups::totalSize()))
-                ->description($free === null ? 'Свободное место на хостинге неизвестно' : 'Свободно на хостинге: '.Backups::humanSize($free)),
+                ->description($free === null
+                    ? 'Лимит места по тарифу — в панели хостинга'
+                    : 'На диске сервера свободно '.Backups::humanSize($free).'; лимит по тарифу — в панели хостинга'),
             Stat::make('Следующая ночная копия', $next->format('d.m H:i'))
                 ->description($next->diffForHumans()),
             Stat::make('За 30 дней', (clone $month)->where('status', 'success')->count().' успешно')
